@@ -407,6 +407,27 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+    const navMenu = document.querySelector(".nav-menu");
+    if (mobileMenuToggle && navMenu) {
+      mobileMenuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("mobile-active");
+        const icon = mobileMenuToggle.querySelector("i");
+        if (icon) {
+          icon.className = navMenu.classList.contains("mobile-active") ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+        }
+      });
+
+      navMenu.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("mobile-active");
+          const icon = mobileMenuToggle.querySelector("i");
+          if (icon) icon.className = "fa-solid fa-bars";
+        });
+      });
+    }
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && modalBackdrop.classList.contains("active")) {
         closeModal();
