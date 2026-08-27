@@ -142,9 +142,68 @@
           <button id="themeToggleBtn" class="theme-toggle-btn" title="Ubah Mode Gelap/Terang">
             <i class="fa-solid fa-sun"></i>
           </button>
+          <button id="adminLogoutBtn" class="btn-secondary" style="border-color: var(--accent-rose); color: var(--accent-rose); font-size: 0.85rem;" title="Keluar dari Panel Admin">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Fullscreen Admin Login Modal -->
+    <div id="adminLoginModal" class="modal-backdrop active" style="z-index: 9999; backdrop-filter: blur(25px); background: rgba(11, 15, 25, 0.92);">
+      <div class="modal-card" style="max-width: 440px; padding: 2.5rem; text-align: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-lg); border-radius: var(--radius-lg);">
+        
+        <div style="width: 64px; height: 64px; border-radius: 20px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1.25rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.35rem; color: var(--text-primary);">Login Panel Admin</h2>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.75rem;">Masukkan kredensial akun admin Anda untuk mengelola konten website.</p>
+
+        <form id="adminLoginForm">
+          <div id="loginErrorAlert" style="display: none; background: rgba(244,63,94,0.15); border: 1px solid var(--accent-rose); color: var(--accent-rose); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.25rem; text-align: left;">
+            <i class="fa-solid fa-triangle-exclamation"></i> <span id="loginErrorMsg">Username atau Password salah!</span>
+          </div>
+
+          <div class="editor-form-group" style="text-align: left;">
+            <label class="editor-label">Username Admin</label>
+            <div style="position: relative;">
+              <i class="fa-solid fa-user" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+              <input type="text" id="loginUsername" class="editor-input" style="padding-left: 2.75rem;" placeholder="admin" value="admin" required>
+            </div>
+          </div>
+
+          <div class="editor-form-group" style="text-align: left;">
+            <label class="editor-label">Password Admin</label>
+            <div style="position: relative;">
+              <i class="fa-solid fa-key" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+              <input type="password" id="loginPassword" class="editor-input" style="padding-left: 2.75rem; padding-right: 2.75rem;" placeholder="••••••••" required>
+              <button type="button" id="togglePasswordBtn" style="position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); cursor: pointer;">
+              <input type="checkbox" id="rememberMe" checked style="accent-color: var(--accent-blue);"> Ingat Saya
+            </label>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Default: admin / admin123</span>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
+            <i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang
+          </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+          <a href="/" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Halaman Utama
+          </a>
+        </div>
+
+      </div>
+    </div>
 
     <!-- Main Admin Workspace -->
     <main class="admin-container">
@@ -464,5 +523,11 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>

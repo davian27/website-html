@@ -1,14 +1,28 @@
 /**
  * Admin Panel Application Logic
- * Mengelola pengubahan isi landing page, CRUD Katalog Software, FAQ, dan Testimoni.
+ * Mengelola Autentikasi Login, Pengubahan Konten Landing Page, CRUD Katalog, FAQ, dan Testimoni.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // State Data
+  // State Data & Credentials
   let siteConfigData = typeof getDynamicSiteConfig === "function" ? getDynamicSiteConfig() : {};
   let catalogData = typeof getDynamicCatalog === "function" ? getDynamicCatalog() : [];
   let testimonialsData = typeof getDynamicTestimonials === "function" ? getDynamicTestimonials() : [];
   let faqsData = typeof getDynamicFaqs === "function" ? getDynamicFaqs() : [];
+
+  // Default Admin Credentials (dapat Diubah)
+  const defaultCreds = { username: "admin", password: "admin123" };
+  let adminCreds = JSON.parse(localStorage.getItem("sk_admin_creds") || JSON.stringify(defaultCreds));
+
+  // DOM Elements - Login & Auth
+  const adminLoginModal = document.getElementById("adminLoginModal");
+  const adminLoginForm = document.getElementById("adminLoginForm");
+  const loginUsernameInput = document.getElementById("loginUsername");
+  const loginPasswordInput = document.getElementById("loginPassword");
+  const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+  const loginErrorAlert = document.getElementById("loginErrorAlert");
+  const loginErrorMsg = document.getElementById("loginErrorMsg");
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
 
   // DOM Elements - Navigation & Toast
   const adminTabBtns = document.querySelectorAll(".admin-tab-btn");
@@ -30,13 +44,83 @@ document.addEventListener("DOMContentLoaded", () => {
   const faqForm = document.getElementById("faqForm");
   const faqAdminList = document.getElementById("faqAdminList");
 
-  // Initialize Admin Panel
+  // Initialize
+  checkAuthSession();
   initTheme();
   populateSiteSettingsForm();
   renderSoftwareTable();
   renderTestimonialsAdmin();
   renderFaqsAdmin();
   setupEventListeners();
+
+  /* ==========================================
+     Authentication System
+     ========================================== */
+  function checkAuthSession() {
+    const isAuthSession = sessionStorage.getItem("sk_admin_authenticated");
+    const isAuthLocal = localStorage.getItem("sk_admin_authenticated");
+    
+    if (isAuthSession === "true" || isAuthLocal === "true") {
+      if (adminLoginModal) adminLoginModal.classList.remove("active");
+      if (adminLogoutBtn) adminLogoutBtn.style.display = "inline-flex";
+    } else {
+      if (adminLoginModal) adminLoginModal.classList.add("active");
+      if (adminLogoutBtn) adminLogoutBtn.style.display = "none";
+    }
+  }
+
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const userVal = loginUsernameInput.value.trim();
+      const passVal = loginPasswordInput.value.trim();
+      const rememberMe = document.getElementById("rememberMe") ? document.getElementById("rememberMe").checked : false;
+
+      if (userVal === adminCreds.username && passVal === adminCreds.password) {
+        // Success Login
+        if (loginErrorAlert) loginErrorAlert.style.display = "none";
+        
+        if (rememberMe) {
+          localStorage.setItem("sk_admin_authenticated", "true");
+        } else {
+          sessionStorage.setItem("sk_admin_authenticated", "true");
+        }
+
+        if (adminLoginModal) adminLoginModal.classList.remove("active");
+        if (adminLogoutBtn) adminLogoutBtn.style.display = "inline-flex";
+        showToast("🔑 Login Berhasil! Selamat Datang Admin.");
+      } else {
+        // Failed Login
+        if (loginErrorAlert) {
+          loginErrorAlert.style.display = "block";
+          loginErrorMsg.textContent = "Username atau Password yang Anda masukkan salah!";
+        }
+      }
+    });
+  }
+
+  // Password Visibility Toggle
+  if (togglePasswordBtn && loginPasswordInput) {
+    togglePasswordBtn.addEventListener("click", () => {
+      const type = loginPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+      loginPasswordInput.setAttribute("type", type);
+      const icon = togglePasswordBtn.querySelector("i");
+      icon.className = type === "password" ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
+    });
+  }
+
+  // Logout Handler
+  if (adminLogoutBtn) {
+    adminLogoutBtn.addEventListener("click", () => {
+      if (confirm("Apakah Anda yakin ingin keluar dari Panel Admin?")) {
+        sessionStorage.removeItem("sk_admin_authenticated");
+        localStorage.removeItem("sk_admin_authenticated");
+        if (adminLoginModal) adminLoginModal.classList.add("active");
+        adminLogoutBtn.style.display = "none";
+        showToast("Anda telah keluar dari Panel Admin.");
+      }
+    });
+  }
 
   /* ==========================================
      Theme Controller
@@ -149,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </tr>
     `).join("");
 
-    // Bind Edit/Delete handlers
     document.querySelectorAll(".edit-sw-btn").forEach(btn => {
       btn.addEventListener("click", () => openSoftwareModal(btn.getAttribute("data-id")));
     });
@@ -203,7 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const pEnt = document.getElementById("swPriceEnterprise").value.trim();
 
       if (id) {
-        // Update existing software
         const sw = catalogData.find(s => s.id === id);
         if (sw) {
           sw.title = title;
@@ -216,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
           sw.prices.enterprise.price = pEnt;
         }
       } else {
-        // Create new software item
         const newSw = {
           id: "sw-custom-" + Date.now(),
           title: title,
