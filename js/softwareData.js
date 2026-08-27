@@ -243,24 +243,24 @@ const defaultSoftwareCatalog = [
 const defaultTestimonials = [
   {
     id: "testi-1",
-    author: "Budi Santoso",
-    role: "Owner Minimarket FreshMart - Surabaya",
+    author: "Lorem Ipsum",
+    role: "Lorem Ipsum",
     rating: 5,
-    quote: "POS Pro Suite benar-benar membantu minimarket 3 cabang saya. Dulu pusing dengan selisih stok, sekarang tiap malam omset dan mutasi stok otomatis rekap via WhatsApp."
+    quote: "POS Pro Suite benar-benar membantu bisnis saya. Dulu pusing dengan selisih stok, sekarang tiap malam omset dan mutasi stok otomatis rekap via WhatsApp."
   },
   {
     id: "testi-2",
-    author: "Diana Putri",
-    role: "Owner Kopi Nuansa - Bandung",
+    author: "Lorem Ipsum",
+    role: "Lorem Ipsum",
     rating: 5,
-    quote: "Resto Touch Master-nya sangat cepat! Pesanan dari kasir layar sentuh langsung nge-print di dapur dan bar. Pelayanan cafe kami jadi 2x lebih cepat."
+    quote: "Resto Touch Master-nya sangat cepat! Pesanan dari kasir layar sentuh langsung nge-print di dapur dan bar. Pelayanan bisnis kami jadi 2x lebih cepat."
   },
   {
     id: "testi-3",
-    author: "dr. Hendra Wijaya",
-    role: "Klinik & Apotek Sehat - Jakarta",
+    author: "Lorem Ipsum",
+    role: "Lorem Ipsum",
     rating: 5,
-    quote: "Apotek & Klinik Master sangat membantu pengawasan obat expired (FEFO). Rekam medis pasien juga tersimpan rapi. Pelayanan tim teknologinya sangat responsif."
+    quote: "Apotek & Klinik Master sangat membantu pengawasan obat expired (FEFO). Rekam medis juga tersimpan rapi. Pelayanan tim teknologinya sangat responsif."
   }
 ];
 
