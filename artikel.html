@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel & Panduan Software - SoftwareKatalog.id</title>
+  <meta name="description" content="Kumpulan artikel, tips manajemen bisnis, dan panduan penggunaan software kasir POS & ERP.">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="bg-ambient"></div>
+  <div class="bg-ambient-orb orb-1"></div>
+  <div class="bg-ambient-orb orb-2"></div>
+
+  <div class="app-container">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+          <div class="brand-text">Software<span>Katalog</span></div>
+        </a>
+
+        <ul class="nav-menu">
+          <li><a href="/" class="nav-link">Beranda</a></li>
+          <li><a href="/#katalog" class="nav-link">Katalog Software</a></li>
+          <li><a href="/artikel" class="nav-link" style="color: var(--accent-blue);">Artikel & Blog</a></li>
+          <li><a href="/admin" class="nav-link" style="color: var(--accent-amber);">Panel Admin</a></li>
+          <li><a href="/#faq" class="nav-link">FAQ</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button id="themeToggleBtn" class="theme-toggle-btn" title="Ubah Mode Gelap/Terang">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <button id="openWriterBtn" class="btn-primary">
+            <i class="fa-solid fa-pen-to-square"></i> Tulis Artikel Baru
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: BLOG & ARTIKEL PORTAL -->
+    <main id="viewBlogSection" class="catalog-section" style="padding-top: 3rem;">
+      <div class="section-header">
+        <span class="section-tag">Blog & Edukasi Bisnis</span>
+        <h2 class="section-title">Artikel, Tips & Panduan Software</h2>
+        <p class="section-subtitle">Wawasan terbaru seputar efisiensi operasional toko, tips memilih software kasir, dan strategi optimasi stok gudang.</p>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="catalog-controls">
+        <div class="search-box-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="searchArticleInput" class="search-input" placeholder="Cari judul artikel atau topik (misal: Kasir, FEFO, Stok)...">
+          <button id="searchClearBtn" class="search-clear-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="filter-categories">
+          <button class="filter-btn article-filter-btn active" data-category="all">
+            <i class="fa-solid fa-border-all"></i> Semua Artikel
+          </button>
+          <button class="filter-btn article-filter-btn" data-category="Tips & Trik">
+            <i class="fa-solid fa-lightbulb"></i> Tips & Trik
+          </button>
+          <button class="filter-btn article-filter-btn" data-category="Manajemen Stok">
+            <i class="fa-solid fa-boxes-stacked"></i> Manajemen Stok
+          </button>
+          <button class="filter-btn article-filter-btn" data-category="Panduan Bisnis">
+            <i class="fa-solid fa-chart-line"></i> Panduan Bisnis
+          </button>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div id="articlesGrid" class="articles-grid">
+        <!-- Dynamically rendered via articleApp.js -->
+      </div>
+    </main>
+
+    <!-- SECTION 2: EDITOR TULIS ARTIKEL (WRITER PANEL) -->
+    <main id="viewWriterSection" class="catalog-section" style="display: none; padding-top: 3rem;">
+      <div class="section-header" style="text-align: left; max-width: 100%; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <span class="section-tag"><i class="fa-solid fa-pen-nib"></i> Modul Penulis</span>
+            <h2 class="section-title">Buat & Publikasikan Artikel Baru</h2>
+          </div>
+          <button id="cancelWriterBtn" class="btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Artikel
+          </button>
+        </div>
+      </div>
+
+      <div class="writer-grid">
+        <!-- Editor Form -->
+        <div class="editor-form-card">
+          <form id="articleForm">
+            
+            <div class="editor-form-group">
+              <label class="editor-label">Judul Artikel <span style="color:var(--accent-rose);">*</span></label>
+              <input type="text" id="inputTitle" class="editor-input" placeholder="Masukkan judul artikel yang menarik..." required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="editor-form-group">
+                <label class="editor-label">Kategori</label>
+                <select id="inputCategory" class="editor-select">
+                  <option value="Tips & Trik">Tips & Trik</option>
+                  <option value="Manajemen Stok">Manajemen Stok</option>
+                  <option value="Panduan Bisnis">Panduan Bisnis</option>
+                  <option value="Update Software">Update Software</option>
+                  <option value="Review Produk">Review Produk</option>
+                </select>
+              </div>
+
+              <div class="editor-form-group">
+                <label class="editor-label">Nama Penulis</label>
+                <input type="text" id="inputAuthor" class="editor-input" placeholder="Tim Redaksi / Nama Anda" value="Tim Redaksi SoftwareKatalog">
+              </div>
+            </div>
+
+            <div class="editor-form-group">
+              <label class="editor-label">URL Gambar Banner / Cover</label>
+              <input type="text" id="inputImage" class="editor-input" placeholder="assets/hero.png atau URL gambar online" value="assets/hero.png">
+            </div>
+
+            <div class="editor-form-group">
+              <label class="editor-label">Ringkasan / Excerpt Singkat</label>
+              <textarea id="inputExcerpt" class="editor-input" rows="2" placeholder="Tuliskan 1-2 kalimat ringkasan artikel ini..."></textarea>
+            </div>
+
+            <div class="editor-form-group">
+              <label class="editor-label">Isi Konten Artikel <span style="color:var(--accent-rose);">*</span></label>
+              
+              <!-- Formatting Toolbar -->
+              <div class="editor-toolbar">
+                <button type="button" class="editor-tool-btn" data-tag="b" title="Cetak Tebal"><b>B</b></button>
+                <button type="button" class="editor-tool-btn" data-tag="i" title="Cetak Miring"><i>I</i></button>
+                <button type="button" class="editor-tool-btn" data-tag="h2" title="Sub-Judul H2">H2</button>
+                <button type="button" class="editor-tool-btn" data-tag="h3" title="Sub-Judul H3">H3</button>
+                <button type="button" class="editor-tool-btn" data-tag="ul" title="Daftar List"><i class="fa-solid fa-list-ul"></i> List</button>
+                <button type="button" class="editor-tool-btn" data-tag="quote" title="Kutipan/Quote"><i class="fa-solid fa-quote-right"></i> Quote</button>
+                <button type="button" class="editor-tool-btn" data-tag="code" title="Kode/Snippet"><i class="fa-solid fa-code"></i> Code</button>
+                <button type="button" class="editor-tool-btn" data-tag="img" title="Sisipkan Gambar"><i class="fa-solid fa-image"></i> Image</button>
+              </div>
+
+              <textarea id="inputContent" class="editor-input editor-textarea-with-toolbar" placeholder="Tulis artikel Anda di sini. Gunakan tombol toolbar di atas untuk format teks..." required></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button type="submit" class="btn-primary" style="flex-grow: 1; justify-content: center;">
+                <i class="fa-solid fa-paper-plane"></i> Publikasikan Artikel Sekarang
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Live Preview Card -->
+        <div class="live-preview-card">
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 1px;">
+            <i class="fa-solid fa-eye"></i> Live Article Preview
+          </div>
+          
+          <div id="livePreview">
+            <!-- Dynamically updated as author types -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo">
+            <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+            <div class="brand-text">Software<span>Katalog</span></div>
+          </a>
+          <p>Portal artikel & informasi seputar software kasir, sistem ERP, dan manajemen toko di Indonesia.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Navigasi Portal</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Katalog Software</a></li>
+            <li><a href="artikel.html">Artikel & Blog</a></li>
+            <li><a href="index.html#faq">Pertanyaan FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Kategori Artikel</h4>
+          <ul class="footer-links">
+            <li><a href="#">Tips & Trik Kasir</a></li>
+            <li><a href="#">Manajemen Stok FEFO</a></li>
+            <li><a href="#">Panduan Bisnis Retail</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Kontak CS</h4>
+          <ul class="footer-links">
+            <li><a href="https://wa.me/6285123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp 24/7</a></li>
+            <li><a href="mailto:sales@softwarekatalog.id"><i class="fa-solid fa-envelope"></i> Email Redaksi</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 SoftwareKatalog.id. Modul Penulis Artikel.</div>
+        <div>Tampilan Modern & Responsive</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Full Article Reader Modal -->
+  <div id="readerModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 800px;">
+      
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <span id="readerCategory" class="badge-tag">Kategori</span>
+          <h2 id="readerTitle" class="card-title" style="margin-top: 0.2rem; font-size: 1.2rem;">Judul Artikel</h2>
+        </div>
+        <button id="readerCloseBtn" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" style="padding: 2rem;">
+        <div id="readerMeta" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;"></div>
+        <img id="readerImage" src="assets/hero.png" alt="Cover Artikel" style="width: 100%; max-height: 320px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+        <div id="readerBody" class="article-formatted-content">
+          <!-- Article HTML Body -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          <i class="fa-solid fa-share-nodes"></i> Bagikan Artikel Ini
+        </div>
+        <button onclick="document.getElementById('readerModal').click()" class="btn-secondary">Tutup Read Modal</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/articleData.js"></script>
+  <script src="js/articleApp.js"></script>
+</body>
+</html>

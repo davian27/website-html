@@ -1,620 +1,455 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoftwareKatalog.id - Software Kasir POS & ERP Bisnis Modern</title>
+  <meta name="description" content="Katalog software komputer & aplikasi kasir POS, inventaris gudang, restoran, apotek, dan servis terpercaya dengan lisensi lifetime sekali bayar.">
+  <meta name="keywords" content="software kasir, aplikasi pos, software minimarket, software restoran, software inventaris, software apotek, software laundry, software bengkel, lisensi lifetime">
   
-  <!-- Primary SEO Meta Tags -->
-  <title>WP Master Hub | Platform Solusi Bisnis Digital</title>
-  <meta name="title" content="WP Master Hub | Platform Produk Solusi Bisnis Digital">
-  <meta name="description" content="Pusat layanan lengkap WordPress Indonesia: Tema & Plugin Premium, Paket Harga Transparan, Promo Kupon Diskon 50%, Dokumentasi API Lengkap, dan Program Partnership.">
-  <meta name="keywords" content="wordpress indonesia, tema wordpress, plugin wordpress, promo plugin, harga lisensi wordpress, dokumentasi wordpress, partnership wordpress, wp admin cms">
-  <meta name="robots" content="index, follow">
-  <meta name="author" content="WP Master Hub Team">
-  <link rel="canonical" href="http://localhost:8080/">
-
-  <!-- Open Graph / Facebook / WhatsApp SEO -->
+  <!-- Open Graph -->
+  <meta property="og:title" content="SoftwareKatalog.id - Software Kasir & ERP Bisnis Modern">
+  <meta property="og:description" content="Tingkatkan omset & efisiensi bisnis Anda dengan software kasir POS & ERP modern lisensi sekali bayar untuk selamanya.">
+  <meta property="og:image" content="assets/hero.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="http://localhost:8080/">
-  <meta property="og:title" content="WP Master Hub | Platform Ekosistem WordPress & Solusi Bisnis Digital">
-  <meta property="og:description" content="Dapatkan tema premium, plugin berkinerja tinggi, dokumentasi teknis, promo spesial, serta peluang partnership eksklusif. Dikelola via WP Admin.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80">
-  <meta property="og:site_name" content="WP Master Hub">
-  <meta property="og:locale" content="id_ID">
 
-  <!-- Twitter SEO -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="http://localhost:8080/">
-  <meta property="twitter:title" content="WP Master Hub | Ekosistem WordPress Indonesia">
-  <meta property="twitter:description" content="Platform ekosistem WordPress lengkap dengan produk, harga, promo, dokumentasi, dan program kemitraan.">
-  <meta property="twitter:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80">
-
-  <!-- Schema.org JSON-LD Structured Data (Rich Snippets Google) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "WP Master Hub",
-    "operatingSystem": "WordPress / Web",
-    "applicationCategory": "BusinessApplication",
-    "offers": {
-      "@type": "AggregateOffer",
-      "priceCurrency": "IDR",
-      "lowPrice": "99000",
-      "highPrice": "899000",
-      "offerCount": "6"
-    },
-    "description": "Platform penyedia Tema & Plugin WordPress berkecepatan tinggi dengan dokumentasi API dan kemitraan."
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "WP Master Hub",
-    "url": "http://localhost:8080/",
-    "logo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=200&q=80",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "customer service",
-      "email": "support@wpmasterhub.id"
-    }
-  }
-  </script>
-
-  <!-- Font Awesome Icons & Google Fonts -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <!-- Favicon & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- ==========================================
-       WP ADMIN BAR (TOP BAR FIXATION)
-       ========================================== -->
-  <div class="wp-admin-bar">
-    <div class="wp-bar-left">
-      <div class="wp-bar-item" onclick="toggleWpAdmin(true)">
-        <i class="fa-brands fa-wordpress" aria-hidden="true"></i>
-        <span>WP Master Hub</span>
-      </div>
-      <div class="wp-bar-item" onclick="toggleWpAdmin(true)">
-        <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
-        <span>WP Admin Panel</span>
-      </div>
-      <div class="wp-bar-item" onclick="openAdminModal('produk')">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i>
-        <span>Tambah Produk</span>
-      </div>
-    </div>
-    <div class="wp-bar-right">
-      <div class="wp-bar-item" onclick="toggleWpAdmin(true)">
-        <i class="fa-solid fa-bell" aria-hidden="true"></i>
-        <span class="wp-badge" id="bar-unread-badge">2 Proposal</span>
-      </div>
-      <div class="wp-bar-item highlight" onclick="handleWpLogout()" title="Klik untuk Log Out">
-        <i class="fa-solid fa-power-off" aria-hidden="true"></i>
-        <span>Keluar (Logout)</span>
-      </div>
-    </div>
-  </div>
+  <!-- Ambient Glow Effects -->
+  <div class="bg-ambient"></div>
+  <div class="bg-ambient-orb orb-1"></div>
+  <div class="bg-ambient-orb orb-2"></div>
 
-  <!-- ==========================================
-       PUBLIC HEADER NAVIGATION
-       ========================================== -->
-  <header class="public-header" role="banner">
-    <div class="container">
-      <div class="nav-wrapper">
-        <a href="#home" class="brand-logo" title="Beranda WP Master Hub">
-          <i class="fa-brands fa-wordpress" aria-hidden="true"></i>
-          <span>WPMaster<span class="tag">Hub</span></span>
+  <div class="app-container">
+
+    <!-- Sticky Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="#" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+          <div class="brand-text">Software<span>Katalog</span></div>
         </a>
 
-        <nav role="navigation" aria-label="Navigasi Utama">
-          <ul class="nav-links">
-            <li><a href="#home" class="nav-link active">Beranda</a></li>
-            <li><a href="#produk" class="nav-link">Produk</a></li>
-            <li><a href="#harga" class="nav-link">Harga</a></li>
-            <li><a href="#promo" class="nav-link">Promo</a></li>
-            <li><a href="#dokumentasi" class="nav-link">Dokumentasi</a></li>
-            <li><a href="#partnership" class="nav-link">Partnership</a></li>
-          </ul>
-        </nav>
+        <ul class="nav-menu">
+          <li><a href="#hero" class="nav-link">Beranda</a></li>
+          <li><a href="#katalog" class="nav-link">Katalog Software</a></li>
+          <li><a href="/artikel" class="nav-link"><i class="fa-solid fa-newspaper" style="font-size: 0.85rem; color: var(--accent-cyan);"></i> Artikel & Blog</a></li>
+          <li><a href="/admin" class="nav-link" style="color: var(--accent-amber);"><i class="fa-solid fa-user-gear" style="font-size: 0.85rem;"></i> Panel Admin</a></li>
+          <li><a href="#keunggulan" class="nav-link">Keunggulan</a></li>
+          <li><a href="#testimoni" class="nav-link">Testimoni</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
 
         <div class="nav-actions">
-          <a href="#harga" class="btn btn-primary btn-sm">
-            <i class="fa-solid fa-rocket" aria-hidden="true"></i> Mulai Sekarang
+          <a href="/admin" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-color: var(--accent-amber);" title="Panel Admin">
+            <i class="fa-solid fa-sliders"></i> Panel Admin
+          </a>
+          <button id="themeToggleBtn" class="theme-toggle-btn" title="Ubah Mode Gelap/Terang">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+          <a href="https://wa.me/6285165655759?text=Halo%20Admin,%20saya%20ingin%20konsultasi%20software%20bisnis" target="_blank" class="btn-primary btn-whatsapp site-wa-link">
+            <i class="fa-brands fa-whatsapp"></i> Konsultasi Gratis
           </a>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- ==========================================
-       HERO SECTION
-       ========================================== -->
-  <section class="hero-section" id="home" aria-labelledby="hero-title">
-    <div class="container">
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
       <div class="hero-grid">
         <div class="hero-content">
-          <span class="section-badge"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Platform WordPress Terintegrasi</span>
-          <h1 id="hero-title">Solusi Terbaik untuk <span>Produk Digital</span> & Bisnis Anda</h1>
-          <p>Dapatkan tema premium, plugin berkinerja tinggi, dokumentasi teknis komprehensif, promo spesial, serta peluang partnership eksklusif. Dikelola langsung melalui sistem WP Admin interaktif.</p>
-          <div class="hero-btns">
-            <a href="#produk" class="btn btn-primary btn-lg">
-              <i class="fa-solid fa-cube" aria-hidden="true"></i> Jelajahi Produk
+          <div id="heroBadgeText" class="hero-badge">
+            <i class="fa-solid fa-sparkles"></i> Software Desktop & Cloud Gen 2026
+          </div>
+          <h1 id="heroTitleText" class="hero-title">
+            Solusi Software <span>Kasir & ERP</span> Terbaik untuk Bisnis Anda
+          </h1>
+          <p id="heroDescText" class="hero-desc">
+            Kelola transaksi kasir, stok gudang, laporan laba rugi, hingga nota digital WhatsApp secara otomatis. <strong>Lisensi sekali bayar untuk selamanya (Lifetime)</strong> tanpa biaya bulanan tersembunyi.
+          </p>
+          
+          <div class="hero-cta">
+            <a href="#katalog" class="btn-primary">
+              <i class="fa-solid fa-layer-group"></i> Jelajahi Katalog Software
             </a>
-            <a href="#partnership" class="btn btn-secondary btn-lg">
-              <i class="fa-solid fa-handshake" aria-hidden="true"></i> Program Partnership
+            <a href="#keunggulan" class="btn-secondary">
+              <i class="fa-solid fa-circle-play"></i> Cara Kerja & Demos
             </a>
           </div>
+
           <div class="hero-stats">
             <div class="stat-item">
-              <h3 id="stat-prod-count">12+</h3>
-              <p>Produk WP Active</p>
+              <span id="statUsers" class="stat-num">1,500+</span>
+              <span class="stat-label">Pengguna Aktif</span>
             </div>
             <div class="stat-item">
-              <h3 id="stat-partner-count">45+</h3>
-              <p>Mitra Partnership</p>
+              <span id="statLicense" class="stat-num">100%</span>
+              <span class="stat-label">Lisensi Lifetime</span>
             </div>
             <div class="stat-item">
-              <h3>99.9%</h3>
-              <p>Kepuasan Klien</p>
+              <span id="statRating" class="stat-num">4.9/5</span>
+              <span class="stat-label">Kepuasan Pelanggan</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-card">
-          <div class="window-header">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
-            <span class="window-title">functions.php — WP Master Engine</span>
-          </div>
-          <pre class="code-preview">
-<span class="code-keyword">function</span> wp_master_init_hub() {
-  <span class="code-keyword">$features</span> = [
-    <span class="code-str">'produk'</span>      => <span class="code-str">'Tema & Plugin High Speed'</span>,
-    <span class="code-str">'harga'</span>       => <span class="code-str">'Paket Langganan Flexi'</span>,
-    <span class="code-str">'promo'</span>       => <span class="code-str">'Voucher Diskon s/d 50%'</span>,
-    <span class="code-str">'docs'</span>        => <span class="code-str">'Panduan & API Complete'</span>,
-    <span class="code-str">'partnership'</span> => <span class="code-str">'Program Afiliasi & Agency'</span>
-  ];
-  <span class="code-keyword">return</span> <span class="code-keyword">new</span> WPMasterHub(<span class="code-keyword">$features</span>);
-}
-<span class="code-keyword">add_action</span>(<span class="code-str">'init'</span>, <span class="code-str">'wp_master_init_hub'</span>);
-          </pre>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================
-       PRODUK SECTION
-       ========================================== -->
-  <section class="section" id="produk" aria-labelledby="produk-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Katalog Pilihan</span>
-        <h2 class="section-title" id="produk-title">Produk & Ekstensi WordPress</h2>
-        <p class="section-desc">Koleksi tema berkecepatan tinggi, plugin berfitur canggih, dan layanan yang dirancang untuk pertumbuhan bisnis online Anda.</p>
-      </div>
-
-      <!-- Category Filter Tabs -->
-      <div class="filter-tabs" id="product-filter-tabs" role="tablist">
-        <button class="tab-btn active" data-cat="all" role="tab">Semua Produk</button>
-        <button class="tab-btn" data-cat="Plugin" role="tab">Plugin</button>
-        <button class="tab-btn" data-cat="Tema" role="tab">Tema WordPress</button>
-        <button class="tab-btn" data-cat="SaaS" role="tab">SaaS & Tools</button>
-        <button class="tab-btn" data-cat="Enterprise" role="tab">Enterprise</button>
-      </div>
-
-      <!-- Products Grid -->
-      <div class="products-grid" id="products-container">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================
-       HARGA SECTION
-       ========================================== -->
-  <section class="section pricing-section" id="harga" aria-labelledby="harga-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Investasi Terbaik</span>
-        <h2 class="section-title" id="harga-title">Paket Harga & Lisensi</h2>
-        <p class="section-desc">Pilihan paket fleksibel transparan tanpa biaya tersembunyi. Dapatkan akses penuh ke ekosistem WP Master Hub.</p>
-      </div>
-
-      <!-- Pricing Toggle -->
-      <div class="pricing-toggle">
-        <span>Bayar Bulanan</span>
-        <div class="toggle-switch" id="pricing-period-toggle" onclick="toggleBillingCycle()" role="switch" aria-label="Pilih siklus penagihan">
-          <div class="toggle-circle"></div>
-        </div>
-        <span>Bayar Tahunan</span>
-        <span class="save-badge">Hemat 20%</span>
-      </div>
-
-      <!-- Pricing Grid -->
-      <div class="pricing-grid" id="pricing-container">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================
-       PROMO SECTION
-       ========================================== -->
-  <section class="section" id="promo" aria-labelledby="promo-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Penawaran Terbatas</span>
-        <h2 class="section-title" id="promo-title">Promo & Diskon Spesial</h2>
-        <p class="section-desc">Gunakan kode kupon di bawah ini untuk klaim diskon hingga 50% untuk pembelian tema, plugin, atau lisensi tahunan.</p>
-      </div>
-
-      <!-- Countdown Banner -->
-      <div class="promo-banner">
-        <div class="promo-banner-content">
-          <h2><i class="fa-solid fa-fire" aria-hidden="true"></i> Flash Sale WordPress Mega Event!</h2>
-          <p>Diskon Spesial hingga 50% untuk seluruh Lisensi Unlimited + Bonus 1 Tahun Update Gratis.</p>
-        </div>
-        <div class="promo-timer" aria-label="Waktu tersisa promo">
-          <div class="timer-box">
-            <span class="num" id="timer-hours">14</span>
-            <span class="label">Jam</span>
-          </div>
-          <div class="timer-box">
-            <span class="num" id="timer-mins">35</span>
-            <span class="label">Menit</span>
-          </div>
-          <div class="timer-box">
-            <span class="num" id="timer-secs">48</span>
-            <span class="label">Detik</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Promo Grid -->
-      <div class="promo-grid" id="promo-container">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================
-       DOKUMENTASI SECTION
-       ========================================== -->
-  <section class="section" id="dokumentasi" style="background: #f6f7f7;" aria-labelledby="docs-title">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Pusat Bantuan</span>
-        <h2 class="section-title" id="docs-title">Dokumentasi & Panduan Teknis</h2>
-        <p class="section-desc">Panduan komprehensif mulai dari cara instalasi, konfigurasi plugin, API webhook, hingga tips optimasi kecepatan site.</p>
-      </div>
-
-      <div class="docs-layout">
-        <!-- Docs Sidebar -->
-        <div class="docs-sidebar">
-          <div class="docs-search">
-            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <input type="text" id="docs-search-input" placeholder="Cari dokumentasi..." onkeyup="filterDocs()" aria-label="Cari artikel dokumentasi">
-          </div>
-          <ul class="docs-menu" id="docs-category-menu">
-            <!-- Categories rendered dynamically -->
-          </ul>
-        </div>
-
-        <!-- Docs Content Viewer -->
-        <article class="docs-content">
-          <div class="docs-article" id="docs-article-view">
-            <!-- Selected document content rendered dynamically -->
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================
-       PARTNERSHIP SECTION
-       ========================================== -->
-  <section class="section partnership-section" id="partnership" aria-labelledby="part-title">
-    <div class="container">
-      <div class="partnership-grid">
-        <div class="partnership-info">
-          <span class="section-badge">Kolaborasi Bisnis</span>
-          <h3 id="part-title">Program Partnership & Aliansi Strategis</h3>
-          <p>Bergabunglah dengan program kemitraan kami. Kami membuka peluang bagi Developer, Agency Web, Reseller, maupun Content Creator untuk tumbuh bersama dalam ekosistem WordPress.</p>
-          
-          <div class="partner-tier-list">
-            <div class="tier-item">
-              <div class="tier-icon"><i class="fa-solid fa-handshake" aria-hidden="true"></i></div>
-              <div class="tier-details">
-                <h5>Agency & Developer Partner</h5>
-                <p>Lisensi multi-site khusus agen web dengan dukungan prioritas VIP 24/7.</p>
-              </div>
-            </div>
-            <div class="tier-item">
-              <div class="tier-icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></div>
-              <div class="tier-details">
-                <h5>Program Afiliasi & Reseller</h5>
-                <p>Komisi menggiurkan hingga 35% untuk setiap rekomendasi lisensi produk.</p>
-              </div>
-            </div>
-            <div class="tier-item">
-              <div class="tier-icon"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i></div>
-              <div class="tier-details">
-                <h5>Integrasi Teknologi / SaaS</h5>
-                <p>Hubungkan plugin atau SaaS Anda secara langsung dengan API WP Master Hub.</p>
+        <div class="hero-preview-container">
+          <div class="hero-image-card">
+            <img src="assets/hero.png" alt="Showcase Software POS & ERP" class="hero-img">
+            <div class="hero-floating-badge">
+              <div class="badge-icon"><i class="fa-solid fa-shield-check"></i></div>
+              <div>
+                <strong style="font-size: 0.9rem; display: block; color: var(--text-primary);">Garansi 100% Resmi</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Installer & License Key Instan</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Partnership Form -->
-        <div class="partnership-form-card">
-          <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Formulir Pengajuan Partnership</h4>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Isi data di bawah ini. Tim partnership kami akan menghubungi Anda dalam kurun waktu 1x24 jam.</p>
+    <!-- Guarantees Bar -->
+    <section class="guarantee-section">
+      <div id="guaranteeGrid" class="guarantee-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
 
-          <form id="partnership-form" onsubmit="handlePartnershipSubmit(event)">
-            <div class="form-group">
-              <label class="form-label" for="part-name">Nama Lengkap / Instansi *</label>
-              <input type="text" id="part-name" class="form-control" placeholder="Contoh: Budi Santoso (Studio Web Pro)" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="part-email">Email Bisnis *</label>
-              <input type="email" id="part-email" class="form-control" placeholder="budi@studioweb.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="part-type">Tipe Kemitraan *</label>
-              <select id="part-type" class="form-control" required>
-                <option value="">-- Pilih Tipe Partnership --</option>
-                <option value="Agency / Reseller">Agency / Reseller Lisensi</option>
-                <option value="Afiliasi">Program Afiliasi</option>
-                <option value="Integrasi SaaS">Integrasi SaaS / Technology Partner</option>
-                <option value="Kustom Enterprise">Kustom Enterprise / Lainnya</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="part-notes">Catatan & Pesan Proposal *</label>
-              <textarea id="part-notes" class="form-control" placeholder="Jelaskan secara singkat rencana kolaborasi yang Anda harapkan..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Kirim Pengajuan Partnership
-            </button>
-          </form>
+    <!-- Software Catalog Section -->
+    <section id="katalog" class="catalog-section">
+      <div class="section-header">
+        <span class="section-tag">Katalog Pilihan</span>
+        <h2 class="section-title">Software Unggulan Siap Pakai</h2>
+        <p class="section-subtitle">Pilih aplikasi software yang sesuai dengan bidang usaha Anda. Dilengkapi fitur lengkap, mudah digunakan, dan dapat disesuaikan.</p>
+      </div>
+
+      <div class="catalog-controls">
+        <!-- Live Search Input -->
+        <div class="search-box-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="searchInput" class="search-input" placeholder="Cari nama software atau fitur (contoh: Kasir, Resep, WhatsApp, Barcode)...">
+          <button id="searchClearBtn" class="search-clear-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="filter-categories">
+          <button class="filter-btn active" data-category="all">
+            <i class="fa-solid fa-border-all"></i> Semua Software
+          </button>
+          <button class="filter-btn" data-category="pos">
+            <i class="fa-solid fa-calculator"></i> Kasir & POS
+          </button>
+          <button class="filter-btn" data-category="resto">
+            <i class="fa-solid fa-utensils"></i> Resto & Cafe
+          </button>
+          <button class="filter-btn" data-category="inventory">
+            <i class="fa-solid fa-boxes-packing"></i> Inventaris & ERP
+          </button>
+          <button class="filter-btn" data-category="health">
+            <i class="fa-solid fa-kit-medical"></i> Apotek & Klinik
+          </button>
+          <button class="filter-btn" data-category="service">
+            <i class="fa-solid fa-wrench"></i> Jasa & Service
+          </button>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ==========================================
-       PUBLIC FOOTER
-       ========================================== -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container">
+      <!-- Dynamic Product Grid -->
+      <div id="productsGrid" class="products-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Key Features & Advantages Section -->
+    <section id="keunggulan" class="info-section">
+      <div class="section-header">
+        <span class="section-tag">Mengapa Memilih Kami</span>
+        <h2 class="section-title">Keunggulan SoftwareKatalog.id</h2>
+        <p class="section-subtitle">Dibuat khusus menggunakan arsitektur modern yang cepat, aman, dan tanpa ketergantungan koneksi internet (Offline-First).</p>
+      </div>
+
+      <div class="guarantee-grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+        <div class="guarantee-item" style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div class="guarantee-icon" style="background: rgba(59,130,246,0.15); color: var(--accent-blue); width: 52px; height: 52px; font-size: 1.5rem;">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;">Lisensi Sekali Bayar (Lifetime)</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Tidak ada biaya langganan tahunan/bulanan. Hemat hingga jutaan rupiah setiap tahunnya untuk operasional bisnis Anda.</p>
+          </div>
+        </div>
+
+        <div class="guarantee-item" style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div class="guarantee-icon" style="background: rgba(16,185,129,0.15); color: var(--accent-emerald); width: 52px; height: 52px; font-size: 1.5rem;">
+            <i class="fa-solid fa-wifi-slash"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;">Offline First & Cloud Backup</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Software dapat beroperasi 100% tanpa internet sehingga toko tetap melayani kasir saat jaringan terputus. Data tersimpan aman di PC Anda.</p>
+          </div>
+        </div>
+
+        <div class="guarantee-item" style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div class="guarantee-icon" style="background: rgba(139,92,246,0.15); color: var(--accent-purple); width: 52px; height: 52px; font-size: 1.5rem;">
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;">Integrasi WhatsApp Gateway</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Kirim nota transaksi digital, laporan setoran kasir, hingga reminder tanggal kadaluarsa atau jatuh tempo servis langsung ke WhatsApp.</p>
+          </div>
+        </div>
+
+        <div class="guarantee-item" style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div class="guarantee-icon" style="background: rgba(245,158,11,0.15); color: var(--accent-amber); width: 52px; height: 52px; font-size: 1.5rem;">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;">Dukungan Teknis Gratis 24/7</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Tim kami siap membantu instalasi awal, konfigurasi printer kasir & scanner barcode via kendali jarak jauh (AnyDesk/TeamViewer).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimoni" class="info-section">
+      <div class="section-header">
+        <span class="section-tag">Ulasan Klien</span>
+        <h2 class="section-title">Apa Kata Pemilik Bisnis?</h2>
+        <p class="section-subtitle">Ribuan toko retail, restoran, dan bengkel telah memercayakan sistem operasional mereka pada software kami.</p>
+      </div>
+
+      <div id="testimonialsGrid" class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-quote">"POS Pro Suite benar-benar membantu minimarket 3 cabang saya. Dulu pusing dengan selisih stok, sekarang tiap malam omset dan mutasi stok otomatis rekap via WhatsApp."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">B</div>
+            <div>
+              <div class="author-name">Budi Santoso</div>
+              <div class="author-role">Owner Minimarket FreshMart - Surabaya</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-quote">"Resto Touch Master-nya sangat cepat! Pesanan dari kasir layar sentuh langsung nge-print di dapur dan bar. Pelayanan cafe kami jadi 2x lebih cepat."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">D</div>
+            <div>
+              <div class="author-name">Diana Putri</div>
+              <div class="author-role">Owner Kopi Nuansa - Bandung</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          <p class="testimonial-quote">"Apotek & Klinik Master sangat membantu pengawasan obat expired (FEFO). Rekam medis pasien juga tersimpan rapi. Pelayanan staf tim teknologinya juga sangat responsif."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">H</div>
+            <div>
+              <div class="author-name">dr. Hendra Wijaya</div>
+              <div class="author-role">Klinik & Apotek Sehat - Jakarta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="info-section">
+      <div class="section-header">
+        <span class="section-tag">Pertanyaan Umum</span>
+        <h2 class="section-title">FAQ Software & Pembelian</h2>
+      </div>
+
+      <div id="faqWrapper" class="faq-wrapper">
+        <div class="faq-item active">
+          <div class="faq-question">
+            Apakah lisensi software ini benar-benar sekali bayar (Lifetime)?
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Ya, 100% Sekali Bayar. Anda tidak perlu membayar iuran langganan bulanan atau tahunan. Software dapat digunakan tanpa batas waktu.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            Bagaimana alur pembelian dan penerimaan software?
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Setelah konfirmasi pembayaran via WhatsApp/Transfer, file installer resmi, panduan buku petunjuk, dan Serial Key Lisensi akan dikirimkan langsung via WhatsApp dan Email Anda dalam hitungan menit.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            Bagaimana jika saya butuh bantuan instalasi di komputer saya?
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Tim teknisi kami siap melakukan instalasi dan setting printer kasir/scanner secara GRATIS via kendali jarak jauh (AnyDesk atau TeamViewer).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            Apakah software ini bisa digunakan saat tidak ada jaringan internet (Offline)?
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            Bisa. Seluruh software kami berbasis Offline-First, sehingga seluruh transaksi kasir dan pencatatan stok tetap berjalan lancar 100% meskipun koneksi internet terputus.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
       <div class="footer-grid">
-        <div class="footer-col">
-          <div class="brand-logo" style="color: white; margin-bottom: 16px;">
-            <i class="fa-brands fa-wordpress" style="color: #00a0d2;" aria-hidden="true"></i>
-            <span>WPMaster<span class="tag">Hub</span></span>
-          </div>
-          <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Platform ekosistem WordPress lengkap dengan manajemen konten Produk, Harga, Promo, Dokumentasi, & Partnership via WP Admin dashboard.</p>
-          <div style="display: flex; gap: 12px; font-size: 18px;">
-            <a href="#" style="color: #c3c4c7;" aria-label="Twitter"><i class="fa-brands fa-twitter" aria-hidden="true"></i></a>
-            <a href="#" style="color: #c3c4c7;" aria-label="Facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
-            <a href="#" style="color: #c3c4c7;" aria-label="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-            <a href="#" style="color: #c3c4c7;" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
-          </div>
-        </div>
-
-        <div class="footer-col">
-          <h4 style="color:white; font-size:16px; font-weight:700; margin-bottom:16px;">Navigasi Hub</h4>
-          <ul class="footer-links">
-            <li><a href="#produk">Katalog Produk</a></li>
-            <li><a href="#harga">Paket Harga</a></li>
-            <li><a href="#promo">Promo Deals</a></li>
-            <li><a href="#dokumentasi">Pusat Dokumentasi</a></li>
-            <li><a href="#partnership">Mitra Partnership</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4 style="color:white; font-size:16px; font-weight:700; margin-bottom:16px;">Produk Populer</h4>
-          <ul class="footer-links">
-            <li><a href="#produk">WP Commerce Speed Pro</a></li>
-            <li><a href="#produk">Elementor Ultra Suite</a></li>
-            <li><a href="#produk">SEO Rocket Master</a></li>
-            <li><a href="#produk">Security Shield WP</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4 style="color:white; font-size:16px; font-weight:700; margin-bottom:16px;">Akses Administrator</h4>
-          <p style="font-size: 13px; margin-bottom: 16px;">Kelola seluruh isian website melalui dashboard WordPress Admin yang praktis.</p>
-          <a href="#wp-admin" class="btn btn-secondary btn-sm">
-            <i class="fa-solid fa-lock" aria-hidden="true"></i> WP Admin (#wp-admin)
+        <div class="footer-brand">
+          <a href="#" class="brand-logo">
+            <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+            <div class="brand-text">Software<span>Katalog</span></div>
           </a>
+          <p>Penyedia solusi aplikasi software kasir, ERP inventaris, apotek, dan restoran terpercaya di Indonesia dengan lisensi resmi sekali bayar.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Produk Software</h4>
+          <ul class="footer-links">
+            <li><a href="#katalog">POS Pro Suite</a></li>
+            <li><a href="#katalog">Resto & Cafe Master</a></li>
+            <li><a href="#katalog">Inventory ERP</a></li>
+            <li><a href="#katalog">Apotek & Klinik</a></li>
+            <li><a href="#katalog">Laundry Pro</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Navigasi Utama</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Beranda</a></li>
+            <li><a href="#katalog">Katalog Software</a></li>
+            <li><a href="#keunggulan">Keunggulan Sistem</a></li>
+            <li><a href="#testimoni">Testimoni Klien</a></li>
+            <li><a href="#faq">Pertanyaan FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Layanan Pelanggan</h4>
+          <ul class="footer-links">
+            <li><a href="https://wa.me/6285123456789" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp CS 24/7</a></li>
+            <li><a href="mailto:sales@softwarekatalog.id"><i class="fa-solid fa-envelope"></i> sales@softwarekatalog.id</a></li>
+            <li><span style="font-size: 0.85rem; color: var(--text-muted);">Senin - Sabtu: 08:00 - 21:00 WIB</span></li>
+          </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 WP Master Hub. Hak Cipta Dilindungi Undang-Undang. Powered by WordPress & Modern Web Engine.</p>
+        <div>&copy; 2026 SoftwareKatalog.id. Hak Cipta Dilindungi Undang-Undang.</div>
+        <div>Desain UI/UX Modern & Elegant</div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <!-- ==========================================
-       AUTHENTIC WORDPRESS LOGIN SCREEN (#wp-admin)
-       ========================================== -->
-  <div class="wp-login-overlay" id="wp-login-overlay">
-    <div class="wp-login-box">
-      <div class="wp-login-logo">
-        <i class="fa-brands fa-wordpress"></i>
-      </div>
-      <h3 style="text-align: center; margin-bottom: 20px; font-weight: 700; color: var(--wp-dark);">Log Masuk WordPress</h3>
-      <form id="wp-login-form" onsubmit="handleWpLogin(event)">
-        <div class="form-group">
-          <label class="form-label" for="wp-user">Nama Pengguna atau Alamat Email</label>
-          <input type="text" id="wp-user" class="form-control" value="admin" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="wp-pass">Kata Sandi</label>
-          <input type="password" id="wp-pass" class="form-control" value="admin123" required>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-          <label style="font-size: 13px; color: var(--text-muted); cursor: pointer;">
-            <input type="checkbox" checked> Ingat Saya
-          </label>
-          <a href="#home" style="font-size: 12px; color: var(--primary);">Kembali ke Situs Utama</a>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-size: 14px;">
-          <i class="fa-solid fa-right-to-bracket"></i> Log Masuk
-        </button>
-      </form>
-      <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #8c8f94; border-top: 1px solid #e2e4e7; padding-top: 12px;">
-        <p>Endpoint URL Admin: <code>#wp-admin</code></p>
-        <p>Akses Demo: User <strong>admin</strong> | Pass <strong>admin123</strong></p>
-      </div>
-    </div>
   </div>
 
-  <!-- ==========================================
-       WP ADMIN OVERLAY PANEL (WP-ADMIN MODAL)
-       ========================================== -->
-  <div class="wp-admin-overlay" id="wp-admin-overlay" role="dialog" aria-label="WP Admin Overlay Panel">
-    <div class="wp-admin-header">
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <span style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <i class="fa-brands fa-wordpress" aria-hidden="true"></i> Dashboard WP Admin
-        </span>
-        <span style="color: #8c8f94; font-size: 12px;">| Version 6.7-MasterEngine</span>
+  <!-- Interactive Product Details Modal Drawer -->
+  <div id="productModal" class="modal-backdrop">
+    <div class="modal-card">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
+            <i id="modalIcon" class="fa-solid fa-calculator"></i>
+          </div>
+          <div>
+            <span id="modalCategoryBadge" class="badge-tag">Best Seller</span>
+            <h2 id="modalTitle" class="card-title" style="margin-top: 0.2rem;">POS Pro Suite 2026</h2>
+          </div>
+        </div>
+        <button id="modalCloseBtn" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <button class="btn btn-secondary btn-sm" onclick="toggleWpAdmin(false)" style="padding: 4px 10px;">
-          <i class="fa-solid fa-globe" aria-hidden="true"></i> Lihat Website
+
+      <!-- Modal Tabs -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="tabFeatures">
+          <i class="fa-solid fa-list-check"></i> Fitur Utama
         </button>
-        <button class="btn btn-danger btn-sm" onclick="handleWpLogout()" style="padding: 4px 10px;">
-          <i class="fa-solid fa-power-off" aria-hidden="true"></i> Keluar
+        <button class="tab-btn" data-tab="tabSpecs">
+          <i class="fa-solid fa-microchip"></i> Spesifikasi Sistem
+        </button>
+        <button class="tab-btn" data-tab="tabPricing">
+          <i class="fa-solid fa-tags"></i> Pilihan Harga & Lisensi
         </button>
       </div>
-    </div>
 
-    <div class="wp-admin-body">
-      <!-- WP Admin Sidebar -->
-      <aside class="wp-sidebar" role="navigation" aria-label="WP Admin Menu">
-        <ul class="wp-menu">
-          <li class="wp-menu-item active" onclick="switchAdminTab('dashboard')" id="menu-dash">
-            <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
-            <span>Dashboard</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('produk')" id="menu-prod">
-            <i class="fa-solid fa-box-open" aria-hidden="true"></i>
-            <span>Kelola Produk</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('harga')" id="menu-prc">
-            <i class="fa-solid fa-tags" aria-hidden="true"></i>
-            <span>Kelola Harga</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('promo')" id="menu-prm">
-            <i class="fa-solid fa-ticket" aria-hidden="true"></i>
-            <span>Kelola Promo</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('dokumentasi')" id="menu-doc">
-            <i class="fa-solid fa-book" aria-hidden="true"></i>
-            <span>Dokumentasi</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('partnership')" id="menu-prt">
-            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
-            <span>Partnership Leads</span>
-          </li>
-          <li class="wp-menu-item" onclick="switchAdminTab('wa_admin')" id="menu-wa">
-            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-            <span>Admin WA Marketing</span>
-          </li>
-        </ul>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Tab 1: Fitur Utama -->
+        <div id="tabFeatures" class="tab-content active">
+          <div id="featuresDetailGrid" class="features-detail-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
 
-        <div class="wp-sidebar-footer">
-          <button class="btn btn-secondary btn-sm" onclick="resetToDefaultData()" style="width: 100%; font-size: 11px; color: var(--danger);">
-            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset Data Default
+        <!-- Tab 2: Spesifikasi System -->
+        <div id="tabSpecs" class="tab-content">
+          <table class="specs-table">
+            <tbody id="specsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tab 3: Pilihan Lisensi & Harga -->
+        <div id="tabPricing" class="tab-content">
+          <div id="pricingGrid" class="pricing-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="modal-footer">
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+          <i class="fa-solid fa-shield-halved" style="color: var(--accent-emerald);"></i> Support Remote & Garansi 100%
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button onclick="document.getElementById('productModal').click()" class="btn-secondary">Tutup</button>
+          <button id="modalWaBtn" class="btn-primary btn-whatsapp">
+            <i class="fa-brands fa-whatsapp"></i> Beli via WhatsApp
           </button>
         </div>
-      </aside>
+      </div>
 
-      <!-- WP Admin Content Area -->
-      <main class="wp-content-area" id="admin-main-content">
-        <!-- Rendered dynamically by app.js -->
-      </main>
     </div>
   </div>
 
-  <!-- ==========================================
-       MODAL FORM UNTUK TAMBAH / EDIT KONTEN
-       ========================================== -->
-  <div class="modal" id="admin-modal" role="dialog" aria-label="Form Modal Admin">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modal-title">Form Input WP Admin</h3>
-        <button class="modal-close" onclick="closeAdminModal()" aria-label="Tutup modal">&times;</button>
-      </div>
-      <div class="modal-body" id="modal-body">
-        <!-- Dynamic Form Fields Inserted via JS -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-sm" onclick="closeAdminModal()">Batal</button>
-        <button class="btn btn-primary btn-sm" id="modal-submit-btn" onclick="saveAdminModalData()">Simpan Perubahan</button>
-      </div>
-    </div>
-  </div>
+  <!-- Floating WhatsApp CTA Button -->
+  <a href="https://wa.me/6285165655759?text=Halo%20Admin,%20saya%20tertarik%20dengan%20software%20katalog%20Anda" target="_blank" class="whatsapp-float-btn" title="Chat Admin via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
 
-  <!-- ==========================================
-       ORDER / DETAIL MODAL (FRONT-END)
-       ========================================== -->
-  <div class="modal" id="order-modal" role="dialog" aria-label="Modal Pemesanan">
-    <div class="modal-content">
-      <div class="modal-header" style="background: var(--primary);">
-        <h3 id="order-modal-title">Rincian Pemesanan Produk</h3>
-        <button class="modal-close" onclick="closeOrderModal()" aria-label="Tutup modal">&times;</button>
-      </div>
-      <div class="modal-body" id="order-modal-body">
-        <!-- Rendered dynamically -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-sm" onclick="closeOrderModal()">Tutup</button>
-        <button class="btn btn-primary btn-sm" onclick="processOrderCheckout()">
-          <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Konfirmasi & Checkout
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================
-       FLOATING WHATSAPP MULTI-ADMIN WIDGET
-       ========================================== -->
-  <div class="wa-float-btn" id="wa-float-btn" onclick="toggleWaWidget()" title="Chat WhatsApp Marketing">
-    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-    <span class="wa-badge-count" id="wa-online-count">3</span>
-  </div>
-
-  <div class="wa-widget-popup" id="wa-widget-popup" role="dialog" aria-label="Chat WhatsApp Marketing">
-    <div class="wa-popup-header">
-      <div class="wa-popup-header-info">
-        <h4><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Tim Marketing WA</h4>
-        <p>Silakan pilih admin sesuai kebutuhan Anda:</p>
-      </div>
-      <button class="wa-popup-close" onclick="toggleWaWidget()" aria-label="Tutup widget">&times;</button>
-    </div>
-    <div class="wa-admin-list" id="wa-admin-list">
-      <!-- Dynamic list rendered by app.js -->
-    </div>
-  </div>
-
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
-
-  <!-- App Script -->
-  <script src="app.js"></script>
+  <!-- JavaScript Modules -->
+  <script src="js/softwareData.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - SoftwareKatalog.id</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .admin-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+    }
+    .admin-header-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(12px);
+    }
+    .admin-tabs-nav {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: var(--transition-fast);
+    }
+    .admin-tab-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-blue);
+    }
+    .admin-tab-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
+    .admin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(12px);
+    }
+    .admin-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .admin-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .admin-table th, .admin-table td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+    }
+    .admin-table th {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .toast-msg {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #10b981;
+      color: #fff;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(16,185,129,0.4);
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="bg-ambient"></div>
+  <div class="bg-ambient-orb orb-1"></div>
+  <div class="bg-ambient-orb orb-2"></div>
+
+  <div class="app-container">
+
+    <!-- Admin Header Navbar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="/" class="brand-logo">
+          <div class="brand-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);"><i class="fa-solid fa-sliders"></i></div>
+          <div class="brand-text">Panel<span>Admin</span></div>
+        </a>
+
+        <div class="nav-actions">
+          <a href="/" class="btn-secondary" style="font-size: 0.85rem;">
+            <i class="fa-solid fa-eye"></i> Lihat Website Utama
+          </a>
+          <button id="themeToggleBtn" class="theme-toggle-btn" title="Ubah Mode Gelap/Terang">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Admin Workspace -->
+    <main class="admin-container">
+      
+      <div class="admin-header-banner">
+        <div>
+          <span style="color: var(--accent-amber); font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fa-solid fa-user-shield"></i> Pengelola Konten Landing Page
+          </span>
+          <h1 style="font-size: 1.6rem; font-weight: 800; margin-top: 0.2rem; color: var(--text-primary);">
+            Manajemen Konten & Software
+          </h1>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">
+            Ubah isi Teks Hero, Nomor WA CS, Tambah/Edit Software Katalog, FAQ, dan Testimoni secara langsung.
+          </p>
+        </div>
+        <button id="resetDefaultsBtn" class="btn-secondary" style="border-color: var(--accent-rose); color: var(--accent-rose);">
+          <i class="fa-solid fa-rotate"></i> Reset Konten ke Awal
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs-nav">
+        <button class="admin-tab-btn active" data-tab="tabSiteSettings">
+          <i class="fa-solid fa-sliders"></i> Info Toko & Hero Section
+        </button>
+        <button class="admin-tab-btn" data-tab="tabCatalogManage">
+          <i class="fa-solid fa-boxes-stacked"></i> Kelola Katalog Software
+        </button>
+        <button class="admin-tab-btn" data-tab="tabTestimonialsManage">
+          <i class="fa-solid fa-star"></i> Testimoni Klien
+        </button>
+        <button class="admin-tab-btn" data-tab="tabFaqManage">
+          <i class="fa-solid fa-circle-question"></i> FAQ & Tanya Jawab
+        </button>
+      </div>
+
+      <!-- TAB 1: SITE SETTINGS & HERO -->
+      <div id="tabSiteSettings" class="admin-tab-content active">
+        <form id="siteSettingsForm" class="admin-card">
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--accent-blue);">
+            <i class="fa-solid fa-store"></i> Informasi Kontak & Identitas Toko
+          </h2>
+
+          <div class="admin-grid-3">
+            <div class="editor-form-group">
+              <label class="editor-label">Nama Toko / Brand</label>
+              <input type="text" id="cfgStoreName" class="editor-input" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Nomor WhatsApp CS (Tanpa +)</label>
+              <input type="text" id="cfgWhatsappNumber" class="editor-input" placeholder="6285165655759" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Email Support</label>
+              <input type="email" id="cfgSupportEmail" class="editor-input" required>
+            </div>
+          </div>
+
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin: 2rem 0 1.5rem; color: var(--accent-blue);">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Teks & Statistik Hero Section
+          </h2>
+
+          <div class="editor-form-group">
+            <label class="editor-label">Teks Badge Atas Hero</label>
+            <input type="text" id="cfgHeroBadge" class="editor-input">
+          </div>
+
+          <div class="admin-grid-3">
+            <div class="editor-form-group">
+              <label class="editor-label">Judul Awalan (Prefix)</label>
+              <input type="text" id="cfgHeroTitlePrefix" class="editor-input">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Judul Warna Highlight</label>
+              <input type="text" id="cfgHeroTitleHighlight" class="editor-input">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Judul Akhiran (Suffix)</label>
+              <input type="text" id="cfgHeroTitleSuffix" class="editor-input">
+            </div>
+          </div>
+
+          <div class="editor-form-group">
+            <label class="editor-label">Deskripsi Paragraf Hero</label>
+            <textarea id="cfgHeroDesc" class="editor-input" rows="3"></textarea>
+          </div>
+
+          <div class="admin-grid-3">
+            <div class="editor-form-group">
+              <label class="editor-label">Statistik 1 (Jumlah User)</label>
+              <input type="text" id="cfgStatUsers" class="editor-input" placeholder="1,500+">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Statistik 2 (Lisensi)</label>
+              <input type="text" id="cfgStatLicense" class="editor-input" placeholder="100%">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Statistik 3 (Rating)</label>
+              <input type="text" id="cfgStatRating" class="editor-input" placeholder="4.9/5">
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <button type="submit" class="btn-primary" style="padding: 0.8rem 2rem;">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan Hero & Kontak
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 2: KATALOG SOFTWARE -->
+      <div id="tabCatalogManage" class="admin-tab-content" style="display: none;">
+        <div class="admin-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">
+              <i class="fa-solid fa-layer-group"></i> Daftar Software Dalam Katalog
+            </h2>
+            <button id="addSoftwareBtn" class="btn-primary">
+              <i class="fa-solid fa-plus"></i> Tambah Software Baru
+            </button>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Software & Category</th>
+                <th>Badge</th>
+                <th>Harga Standard</th>
+                <th>Harga Pro</th>
+                <th>Aksi Edit</th>
+              </tr>
+            </thead>
+            <tbody id="softwareTableBody">
+              <!-- Rendered via adminApp.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: TESTIMONI -->
+      <div id="tabTestimonialsManage" class="admin-tab-content" style="display: none;">
+        <div class="admin-grid-2">
+          <form id="testiForm" class="admin-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;" id="testiFormTitle">
+              <i class="fa-solid fa-comment-medical"></i> Tambah Testimoni Baru
+            </h3>
+            <input type="hidden" id="testiEditId">
+
+            <div class="editor-form-group">
+              <label class="editor-label">Nama Pelanggan / Klien</label>
+              <input type="text" id="testiAuthor" class="editor-input" required placeholder="Budi Santoso">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Jabatan / Nama Toko</label>
+              <input type="text" id="testiRole" class="editor-input" required placeholder="Owner Minimarket FreshMart">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Rating (1 - 5 Bintang)</label>
+              <select id="testiRating" class="editor-select">
+                <option value="5">⭐⭐⭐⭐⭐ (5 Bintang)</option>
+                <option value="4">⭐⭐⭐⭐ (4 Bintang)</option>
+                <option value="3">⭐⭐⭐ (3 Bintang)</option>
+              </select>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Isi Ulasan Testimoni</label>
+              <textarea id="testiQuote" class="editor-input" rows="3" required placeholder="Tuliskan ulasan positif pelanggan..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Testimoni
+            </button>
+          </form>
+
+          <div class="admin-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">
+              Daftar Testimoni Terpasang
+            </h3>
+            <div id="testimonialsAdminList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: FAQ -->
+      <div id="tabFaqManage" class="admin-tab-content" style="display: none;">
+        <div class="admin-grid-2">
+          <form id="faqForm" class="admin-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;" id="faqFormTitle">
+              <i class="fa-solid fa-question-circle"></i> Tambah FAQ Baru
+            </h3>
+            <input type="hidden" id="faqEditId">
+
+            <div class="editor-form-group">
+              <label class="editor-label">Pertanyaan FAQ</label>
+              <input type="text" id="faqQuestion" class="editor-input" required placeholder="Apakah lisensi software ini lifetime?">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Jawaban FAQ</label>
+              <textarea id="faqAnswer" class="editor-input" rows="4" required placeholder="Tuliskan jawaban lengkap..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan FAQ
+            </button>
+          </form>
+
+          <div class="admin-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">
+              Daftar FAQ Terpasang
+            </h3>
+            <div id="faqAdminList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-bottom">
+        <div>&copy; 2026 SoftwareKatalog.id. Panel Kontrol Admin.</div>
+        <div>Tampilan Modern & Sleek</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL EDIT/ADD SOFTWARE DRAWER -->
+  <div id="softwareModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 750px;">
+      <div class="modal-header">
+        <h2 id="softwareModalTitle" class="card-title">Edit Software</h2>
+        <button id="softwareModalCloseBtn" class="modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="softwareEditForm">
+        <div class="modal-body" style="padding: 2rem;">
+          <input type="hidden" id="swId">
+          
+          <div class="admin-grid-2">
+            <div class="editor-form-group">
+              <label class="editor-label">Judul Software <span style="color:var(--accent-rose);">*</span></label>
+              <input type="text" id="swTitle" class="editor-input" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Kategori</label>
+              <select id="swCategory" class="editor-select">
+                <option value="pos">Kasir & POS</option>
+                <option value="resto">Resto & Cafe</option>
+                <option value="inventory">Inventaris & ERP</option>
+                <option value="health">Apotek & Klinik</option>
+                <option value="service">Jasa & Service</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="editor-form-group">
+              <label class="editor-label">Tagline Singkat</label>
+              <input type="text" id="swTagline" class="editor-input" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Badge Label</label>
+              <input type="text" id="swBadge" class="editor-input" placeholder="Best Seller / Terpopuler">
+            </div>
+          </div>
+
+          <div class="editor-form-group">
+            <label class="editor-label">Deskripsi Software</label>
+            <textarea id="swDescription" class="editor-input" rows="3" required></textarea>
+          </div>
+
+          <h3 style="font-size: 1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--accent-blue);">
+            Harga Lisensi Sekali Bayar
+          </h3>
+
+          <div class="admin-grid-3">
+            <div class="editor-form-group">
+              <label class="editor-label">Harga Standard (Rp)</label>
+              <input type="text" id="swPriceStandard" class="editor-input" placeholder="750.000" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Harga Pro (Rp)</label>
+              <input type="text" id="swPricePro" class="editor-input" placeholder="1.490.000" required>
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Harga Enterprise (Rp)</label>
+              <input type="text" id="swPriceEnterprise" class="editor-input" placeholder="2.850.000" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" onclick="document.getElementById('softwareModal').click()" class="btn-secondary">Batal</button>
+          <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Simpan Software</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast-msg">
+    <i class="fa-solid fa-circle-check"></i> Perubahan berhasil disimpan!
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/softwareData.js"></script>
+  <script src="js/adminApp.js"></script>
+</body>
+</html>
