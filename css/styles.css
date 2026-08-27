@@ -1505,6 +1505,10 @@ button, input, select {
    Comprehensive Mobile & Tablet Responsive Design
    ========================================================================== */
 
+.mobile-only-item {
+  display: none;
+}
+
 /* Mobile Hamburger Menu Toggle Button */
 .mobile-menu-toggle {
   display: none;
@@ -1572,6 +1576,11 @@ html, body {
     justify-content: space-between;
   }
 
+  .mobile-only-item {
+    display: block;
+    width: 100%;
+  }
+
   .mobile-menu-toggle {
     display: flex;
   }
@@ -1584,9 +1593,7 @@ html, body {
   }
 
   .nav-actions .btn-whatsapp {
-    padding: 0.4rem 0.65rem;
-    font-size: 0.78rem;
-    white-space: nowrap;
+    display: none !important;
   }
 
   /* Fixed Mobile Drawer Overlay - 100% viewport width, zero overflow */
