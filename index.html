@@ -43,18 +43,14 @@
 
         <ul class="nav-menu">
           <li><a href="#hero" class="nav-link">Beranda</a></li>
-          <li><a href="#katalog" class="nav-link">Katalog Software</a></li>
+          <li><a href="#katalog" class="nav-link">Produk</a></li>
           <li><a href="/artikel" class="nav-link"><i class="fa-solid fa-newspaper" style="font-size: 0.85rem; color: var(--accent-cyan);"></i> Artikel & Blog</a></li>
-          <li><a href="/admin" class="nav-link" style="color: var(--accent-amber);"><i class="fa-solid fa-user-gear" style="font-size: 0.85rem;"></i> Panel Admin</a></li>
           <li><a href="#keunggulan" class="nav-link">Keunggulan</a></li>
           <li><a href="#testimoni" class="nav-link">Testimoni</a></li>
           <li><a href="#faq" class="nav-link">FAQ</a></li>
         </ul>
 
         <div class="nav-actions">
-          <a href="/admin" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem; border-color: var(--accent-amber);" title="Panel Admin">
-            <i class="fa-solid fa-sliders"></i> Panel Admin
-          </a>
           <button id="themeToggleBtn" class="theme-toggle-btn" title="Ubah Mode Gelap/Terang">
             <i class="fa-solid fa-sun"></i>
           </button>
@@ -451,5 +447,11 @@
   <!-- JavaScript Modules -->
   <script src="js/softwareData.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
