@@ -786,6 +786,14 @@ button, input, select {
   transform: scale(1);
 }
 
+.modal-card form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .modal-header {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border-color);
@@ -793,6 +801,7 @@ button, input, select {
   align-items: center;
   justify-content: space-between;
   background: var(--bg-card);
+  flex-shrink: 0;
 }
 
 .modal-title-box {
@@ -839,6 +848,7 @@ button, input, select {
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-card);
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .tab-btn {
@@ -876,6 +886,19 @@ button, input, select {
   padding: 2rem;
   overflow-y: auto;
   flex-grow: 1;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
 .tab-content {
@@ -1498,6 +1521,29 @@ button, input, select {
   transition: var(--transition-fast);
 }
 
+/* Prevent accidental horizontal page overflow */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Mobile Hamburger Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.15rem;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
 .mobile-menu-toggle:hover {
   border-color: var(--accent-blue);
   color: var(--accent-blue);
@@ -1505,25 +1551,65 @@ button, input, select {
 
 /* Tablet & Mobile Breakpoints (max-width: 868px) */
 @media (max-width: 868px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .nav-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .mobile-menu-toggle {
     display: flex;
   }
 
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .nav-actions .btn-whatsapp {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  /* Fixed Mobile Drawer Overlay - 100% viewport width, zero overflow */
   .nav-menu {
     display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 58px;
     left: 0;
     right: 0;
+    width: 100vw;
+    max-width: 100vw;
+    max-height: calc(100vh - 58px);
+    overflow-y: auto;
     background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--accent-blue);
     flex-direction: column;
-    padding: 1.25rem 2rem;
-    gap: 1rem;
-    align-items: flex-start;
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(20px);
-    z-index: 99;
+    padding: 1.25rem;
+    gap: 0.75rem;
+    align-items: stretch;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(25px);
+    z-index: 999;
+    box-sizing: border-box;
   }
 
   .nav-menu.mobile-active {
@@ -1532,9 +1618,24 @@ button, input, select {
 
   .nav-menu .nav-link {
     width: 100%;
-    padding: 0.5rem 0;
-    font-size: 1.05rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    transition: var(--transition-fast);
+  }
+
+  .nav-menu .nav-link:hover, .nav-menu .nav-link:active {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: var(--bg-glass);
   }
 
   .hero {
