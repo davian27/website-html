@@ -672,6 +672,22 @@ function renderAdminDashboard(main) {
       </div>
     </div>
 
+    <!-- Vercel Serverless Endpoint Status Banner -->
+    <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 38px; height: 38px; border-radius: 8px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #333;">
+          <svg width="18" height="18" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
+        </div>
+        <div>
+          <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #fff;">Vercel Admin Serverless Endpoint</h4>
+          <p style="margin: 2px 0 0 0; font-size: 12px; color: var(--text-muted);">Endpoint API: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: #38bdf8;">/api/admin</code> | Status: <span id="vercel-api-status-badge" style="color: #4ade80; font-weight: 600;">Memeriksa...</span></p>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="checkVercelApiStatus()" style="font-size: 12px; padding: 6px 12px;">
+        <i class="fa-solid fa-arrows-rotate"></i> Cek Server Endpoint
+      </button>
+    </div>
+
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-top: 30px;">
       <div class="admin-table-wrapper" style="padding: 20px;">
         <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;"><i class="fa-solid fa-handshake"></i> Proposal Partnership Terbaru</h3>
@@ -1436,21 +1452,57 @@ function processOrderCheckout() {
 // ==========================================
 // WP ADMIN ENDPOINT ROUTING & AUTH ENGINE
 // ==========================================
-function handleWpLogin(e) {
+async function handleWpLogin(e) {
   if (e) e.preventDefault();
   const user = document.getElementById('wp-user')?.value || 'admin';
   const pass = document.getElementById('wp-pass')?.value || 'admin123';
 
-  if (user && pass) {
-    localStorage.setItem('wpmaster_admin_logged_in', 'true');
-    showToast('Log Masuk Berhasil! Selamat Datang di WP Admin.', 'success');
-    window.location.hash = '#wp-admin';
-    handleRouting();
+  if (!user || !pass) {
+    showToast('Harap isi username dan password.', 'warning');
+    return;
+  }
+
+  try {
+    // Submit login request to Vercel Serverless API Endpoint (/api/admin/login)
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user, pass })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('wpmaster_admin_logged_in', 'true');
+      if (data.token) {
+        localStorage.setItem('wpmaster_admin_token', data.token);
+      }
+      showToast(data.message || 'Log Masuk Berhasil! Selamat Datang di WP Admin.', 'success');
+      window.location.hash = '#wp-admin';
+      handleRouting();
+      return;
+    } else {
+      const errData = await response.json().catch(() => ({}));
+      showToast(errData.message || 'Username atau Password salah!', 'error');
+      return;
+    }
+  } catch (err) {
+    // Fallback authentication for static local environment
+    if ((user === 'admin' && pass === 'admin123') || user.length > 0) {
+      localStorage.setItem('wpmaster_admin_logged_in', 'true');
+      showToast('Log Masuk Berhasil! (Mode Offline / Static Fallback)', 'success');
+      window.location.hash = '#wp-admin';
+      handleRouting();
+    } else {
+      showToast('Username atau Password salah!', 'error');
+    }
   }
 }
 
 function handleWpLogout() {
   localStorage.removeItem('wpmaster_admin_logged_in');
+  localStorage.removeItem('wpmaster_admin_token');
   document.body.classList.remove('has-admin-bar');
   const loginModal = document.getElementById('wp-login-overlay');
   const adminOverlay = document.getElementById('wp-admin-overlay');
@@ -1470,7 +1522,7 @@ function handleRouting() {
   const search = window.location.search;
   const pathname = window.location.pathname;
 
-  const isWpAdminRoute = hash === '#wp-admin' || hash.startsWith('#wp-admin') || search.includes('wp-admin') || pathname.endsWith('/wp-admin');
+  const isWpAdminRoute = hash === '#wp-admin' || hash.startsWith('#wp-admin') || search.includes('wp-admin') || pathname.endsWith('/wp-admin') || pathname.endsWith('/admin');
   const isLoggedIn = localStorage.getItem('wpmaster_admin_logged_in') === 'true';
 
   const loginOverlay = document.getElementById('wp-login-overlay');
@@ -1482,6 +1534,7 @@ function handleRouting() {
       if (loginOverlay) loginOverlay.classList.remove('active');
       if (adminOverlay) adminOverlay.classList.add('active');
       renderAdminContent();
+      setTimeout(checkVercelApiStatus, 200);
     } else {
       document.body.classList.remove('has-admin-bar');
       if (adminOverlay) adminOverlay.classList.remove('active');
@@ -1496,6 +1549,29 @@ function handleRouting() {
     } else {
       document.body.classList.remove('has-admin-bar');
     }
+  }
+}
+
+async function checkVercelApiStatus() {
+  const badge = document.getElementById('vercel-api-status-badge');
+  if (!badge) return;
+
+  badge.textContent = 'Menghubungkan...';
+  badge.style.color = '#f59e0b';
+
+  try {
+    const res = await fetch('/api/admin');
+    if (res.ok) {
+      const data = await res.json();
+      badge.textContent = `🟢 Serverless Active (${data.environment || 'Vercel'})`;
+      badge.style.color = '#4ade80';
+    } else {
+      badge.textContent = '🟡 Mode Offline / Static Fallback';
+      badge.style.color = '#f59e0b';
+    }
+  } catch (e) {
+    badge.textContent = '🟡 Mode Offline / Static Fallback';
+    badge.style.color = '#f59e0b';
   }
 }
 
