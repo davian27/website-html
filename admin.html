@@ -312,6 +312,44 @@
             </button>
           </div>
         </form>
+
+        <!-- Form Ganti Username & Password Admin -->
+        <form id="changePasswordForm" class="admin-card" style="margin-top: 1.5rem;">
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--accent-amber);">
+            <i class="fa-solid fa-user-shield"></i> Ubah Username & Password Login Admin
+          </h2>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Atur kredensial akun admin Anda agar orang lain tidak bisa membuka Panel Admin ini.
+          </p>
+
+          <div class="admin-grid-2">
+            <div class="editor-form-group">
+              <label class="editor-label">Username Admin Baru</label>
+              <input type="text" id="changeAdminUsername" class="editor-input" required placeholder="admin">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Password Saat Ini</label>
+              <input type="password" id="changeCurrentPassword" class="editor-input" required placeholder="Masukkan password saat ini">
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="editor-form-group">
+              <label class="editor-label">Password Baru</label>
+              <input type="password" id="changeNewPassword" class="editor-input" required placeholder="Masukkan password baru">
+            </div>
+            <div class="editor-form-group">
+              <label class="editor-label">Konfirmasi Password Baru</label>
+              <input type="password" id="changeConfirmPassword" class="editor-input" required placeholder="Ulangi password baru">
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #ef4444); border: none; padding: 0.8rem 2rem;">
+              <i class="fa-solid fa-key"></i> Simpan Username & Password Baru
+            </button>
+          </div>
+        </form>
       </div>
 
       <!-- TAB 2: KATALOG SOFTWARE -->

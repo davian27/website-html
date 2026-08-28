@@ -1,6 +1,6 @@
 /**
  * Admin Panel Application Logic
- * Mengelola Autentikasi Login, Pengubahan Konten Landing Page, CRUD Katalog, FAQ, dan Testimoni.
+ * Mengelola Autentikasi Login, Pengubahan Username & Password Admin, Content Management System (Hero, Katalog, FAQ, Testimoni).
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let testimonialsData = typeof getDynamicTestimonials === "function" ? getDynamicTestimonials() : [];
   let faqsData = typeof getDynamicFaqs === "function" ? getDynamicFaqs() : [];
 
-  // Default Admin Credentials (dapat Diubah)
+  // Default Admin Credentials (dapat Diubah Dinamis)
   const defaultCreds = { username: "admin", password: "admin123" };
   let adminCreds = JSON.parse(localStorage.getItem("sk_admin_creds") || JSON.stringify(defaultCreds));
 
@@ -23,6 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginErrorAlert = document.getElementById("loginErrorAlert");
   const loginErrorMsg = document.getElementById("loginErrorMsg");
   const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+  // DOM Elements - Change Password Form
+  const changePasswordForm = document.getElementById("changePasswordForm");
+  const changeAdminUsername = document.getElementById("changeAdminUsername");
+  const changeCurrentPassword = document.getElementById("changeCurrentPassword");
+  const changeNewPassword = document.getElementById("changeNewPassword");
+  const changeConfirmPassword = document.getElementById("changeConfirmPassword");
 
   // DOM Elements - Navigation & Toast
   const adminTabBtns = document.querySelectorAll(".admin-tab-btn");
@@ -76,8 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const passVal = loginPasswordInput.value.trim();
       const rememberMe = document.getElementById("rememberMe") ? document.getElementById("rememberMe").checked : false;
 
-      if (userVal === adminCreds.username && passVal === adminCreds.password) {
-        // Success Login
+      // Ambil kredensial admin terbaru dari LocalStorage
+      const currentCreds = JSON.parse(localStorage.getItem("sk_admin_creds") || JSON.stringify(defaultCreds));
+
+      if (userVal === currentCreds.username && passVal === currentCreds.password) {
+        // Login Berhasil
         if (loginErrorAlert) loginErrorAlert.style.display = "none";
         
         if (rememberMe) {
@@ -90,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (adminLogoutBtn) adminLogoutBtn.style.display = "inline-flex";
         showToast("🔑 Login Berhasil! Selamat Datang Admin.");
       } else {
-        // Failed Login
+        // Login Gagal
         if (loginErrorAlert) {
           loginErrorAlert.style.display = "block";
           loginErrorMsg.textContent = "Username atau Password yang Anda masukkan salah!";
@@ -119,6 +129,53 @@ document.addEventListener("DOMContentLoaded", () => {
         adminLogoutBtn.style.display = "none";
         showToast("Anda telah keluar dari Panel Admin.");
       }
+    });
+  }
+
+  /* ==========================================
+     Ubah Username & Password Admin
+     ========================================== */
+  if (changePasswordForm) {
+    if (changeAdminUsername) {
+      changeAdminUsername.value = adminCreds.username || "admin";
+    }
+
+    changePasswordForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newUsername = changeAdminUsername.value.trim();
+      const currentPass = changeCurrentPassword.value.trim();
+      const newPass = changeNewPassword.value.trim();
+      const confirmPass = changeConfirmPassword.value.trim();
+
+      const savedCreds = JSON.parse(localStorage.getItem("sk_admin_creds") || JSON.stringify(defaultCreds));
+
+      if (currentPass !== savedCreds.password) {
+        alert("❌ Password saat ini yang Anda masukkan salah!");
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        alert("❌ Password Baru dan Konfirmasi Password tidak sama!");
+        return;
+      }
+
+      if (newPass.length < 4) {
+        alert("❌ Password baru minimal harus 4 karakter!");
+        return;
+      }
+
+      // Simpan kredensial baru ke LocalStorage
+      adminCreds = {
+        username: newUsername,
+        password: newPass
+      };
+      localStorage.setItem("sk_admin_creds", JSON.stringify(adminCreds));
+
+      changeCurrentPassword.value = "";
+      changeNewPassword.value = "";
+      changeConfirmPassword.value = "";
+
+      showToast("🔐 Username & Password Admin berhasil diperbarui!");
     });
   }
 
