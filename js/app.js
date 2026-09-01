@@ -41,11 +41,108 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize App
   initTheme();
   renderDynamicHeroAndSiteConfig();
+  renderHeroSlideshow();
   renderGuarantees();
   renderProducts();
   renderTestimonials();
   renderFaqs();
   setupEventListeners();
+
+  /* ==========================================
+     Hero Slideshow Carousel Controller
+     ========================================== */
+  function renderHeroSlideshow() {
+    const slides = typeof getDynamicHeroSlides === "function" ? getDynamicHeroSlides() : [];
+    const container = document.getElementById("heroSlideshowContainer");
+    const dotsContainer = document.getElementById("heroSliderDots");
+    const prevBtn = document.getElementById("heroPrevBtn");
+    const nextBtn = document.getElementById("heroNextBtn");
+    if (!container || slides.length === 0) return;
+
+    let currentSlideIndex = 0;
+    let autoPlayTimer = null;
+
+    container.innerHTML = slides.map((slide, idx) => `
+      <div class="hero-slide ${idx === 0 ? 'active' : ''}">
+        <img src="${slide.image}" alt="${slide.caption || 'Showcase Software'}">
+        ${slide.caption ? `<div class="hero-slide-caption">${slide.caption}</div>` : ''}
+      </div>
+    `).join("");
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = slides.map((_, idx) => `
+        <span class="hero-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}"></span>
+      `).join("");
+    }
+
+    if (slides.length <= 1) {
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
+      if (dotsContainer) dotsContainer.style.display = "none";
+      return;
+    } else {
+      if (prevBtn) prevBtn.style.display = "flex";
+      if (nextBtn) nextBtn.style.display = "flex";
+      if (dotsContainer) dotsContainer.style.display = "flex";
+    }
+
+    function goToSlide(index) {
+      const slideEls = container.querySelectorAll(".hero-slide");
+      const dotEls = dotsContainer ? dotsContainer.querySelectorAll(".hero-dot") : [];
+      if (slideEls.length === 0) return;
+
+      currentSlideIndex = (index + slideEls.length) % slideEls.length;
+
+      slideEls.forEach((slide, idx) => {
+        slide.classList.toggle("active", idx === currentSlideIndex);
+      });
+      dotEls.forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === currentSlideIndex);
+      });
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setInterval(() => {
+        goToSlide(currentSlideIndex + 1);
+      }, 4000);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        goToSlide(currentSlideIndex - 1);
+        startAutoPlay();
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        goToSlide(currentSlideIndex + 1);
+        startAutoPlay();
+      });
+    }
+
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll(".hero-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+          const idx = parseInt(dot.getAttribute("data-index"));
+          goToSlide(idx);
+          startAutoPlay();
+        });
+      });
+    }
+
+    const cardEl = document.getElementById("heroImageCard");
+    if (cardEl) {
+      cardEl.addEventListener("mouseenter", stopAutoPlay);
+      cardEl.addEventListener("mouseleave", startAutoPlay);
+    }
+
+    startAutoPlay();
+  }
 
   /* ==========================================
      Theme Controller

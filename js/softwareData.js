@@ -287,9 +287,44 @@ const defaultFaqs = [
   }
 ];
 
+const defaultHeroSlides = [
+  {
+    id: "slide-1",
+    image: "assets/hero.png",
+    caption: "POS Pro Suite - Software Kasir Multi-Cabang & Stok Realtime"
+  },
+  {
+    id: "slide-2",
+    image: "assets/hero_software_showcase_1786717703441.png",
+    caption: "Resto & Cafe Touch Master - Sistem Kasir Layar Sentuh & Dapur"
+  },
+  {
+    id: "slide-3",
+    image: "assets/hero.png",
+    caption: "Inventory ERP - Laporan Keuangan & Manajemen Stok Otomatis"
+  }
+];
+
 /* ===================================================
    Dynamic Getters & Setters (LocalStorage Integration)
    =================================================== */
+
+function getDynamicHeroSlides() {
+  const custom = localStorage.getItem("sk_hero_slides");
+  if (custom) {
+    try {
+      const parsed = JSON.parse(custom);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (e) {
+      return defaultHeroSlides;
+    }
+  }
+  return defaultHeroSlides;
+}
+
+function saveDynamicHeroSlides(slidesArray) {
+  localStorage.setItem("sk_hero_slides", JSON.stringify(slidesArray));
+}
 
 function getDynamicSiteConfig() {
   const custom = localStorage.getItem("sk_site_config");

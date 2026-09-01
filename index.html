@@ -103,8 +103,19 @@
         </div>
 
         <div class="hero-preview-container">
-          <div class="hero-image-card">
-            <img src="assets/hero.png" alt="Showcase Software POS & ERP" class="hero-img">
+          <div id="heroImageCard" class="hero-image-card">
+            <!-- Hero Slideshow Carousel -->
+            <div id="heroSlideshowContainer" class="hero-slideshow">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Slider Controls -->
+            <button id="heroPrevBtn" class="hero-slider-arrow prev" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
+            <button id="heroNextBtn" class="hero-slider-arrow next" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
+
+            <!-- Dots Indicators -->
+            <div id="heroSliderDots" class="hero-slider-dots"></div>
+
             <div class="hero-floating-badge">
               <div class="badge-icon"><i class="fa-solid fa-shield-check"></i></div>
               <div>

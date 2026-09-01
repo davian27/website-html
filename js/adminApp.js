@@ -1,6 +1,6 @@
 /**
  * Admin Panel Application Logic
- * Mengelola Autentikasi Login, Pengubahan Username & Password Admin, Content Management System (Hero, Katalog, FAQ, Testimoni).
+ * Mengelola Autentikasi Login, Pengubahan Username & Password Admin, Content Management System (Hero, Slideshow, Katalog, FAQ, Testimoni).
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let catalogData = typeof getDynamicCatalog === "function" ? getDynamicCatalog() : [];
   let testimonialsData = typeof getDynamicTestimonials === "function" ? getDynamicTestimonials() : [];
   let faqsData = typeof getDynamicFaqs === "function" ? getDynamicFaqs() : [];
+  let heroSlidesData = typeof getDynamicHeroSlides === "function" ? getDynamicHeroSlides() : [];
 
   // Default Admin Credentials (dapat Diubah Dinamis)
   const defaultCreds = { username: "admin", password: "admin123" };
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkAuthSession();
   initTheme();
   populateSiteSettingsForm();
+  renderAdminHeroSlides();
   renderSoftwareTable();
   renderTestimonialsAdmin();
   renderFaqsAdmin();
@@ -176,6 +178,70 @@ document.addEventListener("DOMContentLoaded", () => {
       changeConfirmPassword.value = "";
 
       showToast("🔐 Username & Password Admin berhasil diperbarui!");
+    });
+  }
+
+  /* ==========================================
+     Kelola Hero Slideshow (Banner Slides)
+     ========================================== */
+  function renderAdminHeroSlides() {
+    const listEl = document.getElementById("adminHeroSlidesList");
+    if (!listEl) return;
+
+    if (heroSlidesData.length === 0) {
+      listEl.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted);">Belum ada slide foto banner terpasang.</p>`;
+      return;
+    }
+
+    listEl.innerHTML = heroSlidesData.map((slide, index) => `
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; flex-grow: 1;">
+          <img src="${slide.image}" alt="Thumb" style="width: 70px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">
+          <div>
+            <strong style="color: var(--text-primary); font-size: 0.9rem; display: block;">Slide #${index + 1}: ${slide.caption || 'Tanpa Caption'}</strong>
+            <span style="font-size: 0.78rem; color: var(--text-muted); word-break: break-all;">${slide.image}</span>
+          </div>
+        </div>
+        <button class="btn-secondary delete-slide-btn" data-id="${slide.id}" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border-color: var(--accent-rose); color: var(--accent-rose); flex-shrink: 0;">
+          <i class="fa-solid fa-trash"></i> Hapus
+        </button>
+      </div>
+    `).join("");
+
+    listEl.querySelectorAll(".delete-slide-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        if (confirm("Apakah Anda yakin ingin menghapus slide foto banner ini?")) {
+          heroSlidesData = heroSlidesData.filter(s => s.id !== id);
+          if (typeof saveDynamicHeroSlides === "function") saveDynamicHeroSlides(heroSlidesData);
+          renderAdminHeroSlides();
+          showToast("Foto slide banner berhasil dihapus!");
+        }
+      });
+    });
+  }
+
+  const addHeroSlideForm = document.getElementById("addHeroSlideForm");
+  if (addHeroSlideForm) {
+    addHeroSlideForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const imgVal = document.getElementById("slideImageInput").value.trim();
+      const captionVal = document.getElementById("slideCaptionInput").value.trim();
+
+      if (!imgVal) return;
+
+      const newSlide = {
+        id: "slide-" + Date.now(),
+        image: imgVal,
+        caption: captionVal
+      };
+
+      heroSlidesData.push(newSlide);
+      if (typeof saveDynamicHeroSlides === "function") saveDynamicHeroSlides(heroSlidesData);
+
+      addHeroSlideForm.reset();
+      renderAdminHeroSlides();
+      showToast("📸 Slide foto banner baru berhasil ditambahkan!");
     });
   }
 

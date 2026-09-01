@@ -350,6 +350,44 @@
             </button>
           </div>
         </form>
+
+        <!-- Form & List Kelola Slide Banner Hero (Slideshow) -->
+        <div class="admin-card" style="margin-top: 1.5rem;">
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--accent-cyan);">
+            <i class="fa-solid fa-images"></i> Kelola Foto & Slideshow Hero Banner
+          </h2>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Tambahkan atau hapus foto banner yang tampil secara bergantian (slideshow) di halaman beranda utama.
+          </p>
+
+          <!-- Form Tambah Slide -->
+          <form id="addHeroSlideForm" style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+              <i class="fa-solid fa-plus-circle"></i> Tambah Slide Gambar Baru
+            </h3>
+            <div class="admin-grid-2">
+              <div class="editor-form-group">
+                <label class="editor-label">URL Gambar Slide / Path File</label>
+                <input type="text" id="slideImageInput" class="editor-input" placeholder="assets/hero.png atau https://link-gambar.com/foto.jpg" required>
+              </div>
+              <div class="editor-form-group">
+                <label class="editor-label">Judul Keterangan / Caption Slide</label>
+                <input type="text" id="slideCaptionInput" class="editor-input" placeholder="Contoh: Showcase POS Pro Suite">
+              </div>
+            </div>
+            <button type="submit" class="btn-primary" style="padding: 0.7rem 1.5rem; font-size: 0.9rem;">
+              <i class="fa-solid fa-image"></i> Tambah Foto Ke Slideshow
+            </button>
+          </form>
+
+          <!-- Daftar Slide Terpasang -->
+          <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+            Daftar Slide Foto Terpasang
+          </h3>
+          <div id="adminHeroSlidesList" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
       </div>
 
       <!-- TAB 2: KATALOG SOFTWARE -->
