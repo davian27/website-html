@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
 
   /* ==========================================
-     Hero Slideshow Carousel Controller
+     Hero Horizontal Sliding Carousel Controller
      ========================================== */
   function renderHeroSlideshow() {
     const slides = typeof getDynamicHeroSlides === "function" ? getDynamicHeroSlides() : [];
@@ -61,13 +61,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentSlideIndex = 0;
     let autoPlayTimer = null;
+    const totalSlides = slides.length;
+    const slideWidthPercent = (100 / totalSlides).toFixed(4);
 
-    container.innerHTML = slides.map((slide, idx) => `
-      <div class="hero-slide ${idx === 0 ? 'active' : ''}">
-        <img src="${slide.image}" alt="${slide.caption || 'Showcase Software'}">
-        ${slide.caption ? `<div class="hero-slide-caption">${slide.caption}</div>` : ''}
+    container.style.overflow = "hidden";
+    container.style.position = "relative";
+    container.style.width = "100%";
+
+    // Track width is totalSlides * 100%
+    container.innerHTML = `
+      <div id="heroSlidesTrack" class="hero-slides-track" style="display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; width: ${totalSlides * 100}% !important; height: 100% !important; transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform;">
+        ${slides.map((slide) => `
+          <div class="hero-slide" style="flex: 0 0 ${slideWidthPercent}% !important; width: ${slideWidthPercent}% !important; min-width: ${slideWidthPercent}% !important; max-width: ${slideWidthPercent}% !important; height: 100% !important; position: relative !important; overflow: hidden !important; box-sizing: border-box !important;">
+            <img src="${slide.image}" alt="${slide.caption || 'Showcase Software'}" style="width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important;" onerror="this.onerror=null; this.src='assets/hero.png';">
+            ${slide.caption ? `<div class="hero-slide-caption">${slide.caption}</div>` : ''}
+          </div>
+        `).join("")}
       </div>
-    `).join("");
+    `;
+
+    const trackEl = document.getElementById("heroSlidesTrack");
 
     if (dotsContainer) {
       dotsContainer.innerHTML = slides.map((_, idx) => `
@@ -75,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `).join("");
     }
 
-    if (slides.length <= 1) {
+    if (totalSlides <= 1) {
       if (prevBtn) prevBtn.style.display = "none";
       if (nextBtn) nextBtn.style.display = "none";
       if (dotsContainer) dotsContainer.style.display = "none";
@@ -87,15 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function goToSlide(index) {
-      const slideEls = container.querySelectorAll(".hero-slide");
+      if (!trackEl) return;
+      currentSlideIndex = (index + totalSlides) % totalSlides;
+
+      // Physically shift track horizontally by exactly 1 slide width (which is 100 / totalSlides %)
+      const shiftPercent = (currentSlideIndex * 100) / totalSlides;
+      trackEl.style.transform = `translateX(-${shiftPercent}%)`;
+
       const dotEls = dotsContainer ? dotsContainer.querySelectorAll(".hero-dot") : [];
-      if (slideEls.length === 0) return;
-
-      currentSlideIndex = (index + slideEls.length) % slideEls.length;
-
-      slideEls.forEach((slide, idx) => {
-        slide.classList.toggle("active", idx === currentSlideIndex);
-      });
       dotEls.forEach((dot, idx) => {
         dot.classList.toggle("active", idx === currentSlideIndex);
       });
@@ -105,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       stopAutoPlay();
       autoPlayTimer = setInterval(() => {
         goToSlide(currentSlideIndex + 1);
-      }, 4000);
+      }, 3500);
     }
 
     function stopAutoPlay() {
@@ -134,6 +146,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     }
+
+    // Touch Swipe Support for Mobile Phones
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    container.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      stopAutoPlay();
+    }, { passive: true });
+
+    container.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeDistance = touchEndX - touchStartX;
+      if (swipeDistance < -40) {
+        goToSlide(currentSlideIndex + 1);
+      } else if (swipeDistance > 40) {
+        goToSlide(currentSlideIndex - 1);
+      }
+      startAutoPlay();
+    }, { passive: true });
 
     const cardEl = document.getElementById("heroImageCard");
     if (cardEl) {
