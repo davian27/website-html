@@ -357,7 +357,7 @@
             <i class="fa-solid fa-images"></i> Kelola Foto & Slideshow Hero Banner
           </h2>
           <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Tambahkan atau hapus foto banner yang tampil secara bergantian (slideshow) di halaman beranda utama.
+            Upload foto baru dari komputer Anda atau masukkan URL/path gambar untuk dijadikan slideshow di halaman beranda.
           </p>
 
           <!-- Form Tambah Slide -->
@@ -365,19 +365,39 @@
             <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
               <i class="fa-solid fa-plus-circle"></i> Tambah Slide Gambar Baru
             </h3>
+            
             <div class="admin-grid-2">
               <div class="editor-form-group">
-                <label class="editor-label">URL Gambar Slide / Path File</label>
-                <input type="text" id="slideImageInput" class="editor-input" placeholder="assets/hero.png atau https://link-gambar.com/foto.jpg" required>
+                <label class="editor-label">Pilih Foto Dari Komputer atau URL Gambar</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="slideImageInput" class="editor-input" placeholder="assets/hero.png atau https://link-gambar.com/foto.jpg" required style="flex-grow: 1;">
+                  <input type="file" id="slideFileInput" accept="image/*" style="display: none;">
+                  <button type="button" id="triggerSlideFileUploadBtn" class="btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.85rem; white-space: nowrap;">
+                    <i class="fa-solid fa-upload"></i> Upload Foto
+                  </button>
+                </div>
               </div>
+
               <div class="editor-form-group">
                 <label class="editor-label">Judul Keterangan / Caption Slide</label>
                 <input type="text" id="slideCaptionInput" class="editor-input" placeholder="Contoh: Showcase POS Pro Suite">
               </div>
             </div>
-            <button type="submit" class="btn-primary" style="padding: 0.7rem 1.5rem; font-size: 0.9rem;">
-              <i class="fa-solid fa-image"></i> Tambah Foto Ke Slideshow
-            </button>
+
+            <!-- Preview Box Thumbnail -->
+            <div id="slidePreviewBox" style="display: none; margin-top: 0.85rem; padding: 0.75rem; background: rgba(0,0,0,0.25); border: 1px dashed var(--accent-blue); border-radius: var(--radius-sm); align-items: center; gap: 1rem;">
+              <img id="slidePreviewImg" src="" alt="Preview Slide" style="width: 110px; height: 65px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">
+              <div>
+                <strong style="font-size: 0.85rem; color: var(--accent-emerald); display: block;"><i class="fa-solid fa-circle-check"></i> Foto Berhasil Dimuat!</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Pratinjau gambar siap ditambahkan ke dalam slideshow.</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.25rem;">
+              <button type="submit" class="btn-primary" style="padding: 0.75rem 1.75rem; font-size: 0.95rem;">
+                <i class="fa-solid fa-image"></i> Tambah Foto Ke Slideshow
+              </button>
+            </div>
           </form>
 
           <!-- Daftar Slide Terpasang -->

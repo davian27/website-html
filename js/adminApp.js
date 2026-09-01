@@ -184,6 +184,75 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ==========================================
      Kelola Hero Slideshow (Banner Slides)
      ========================================== */
+  const triggerSlideFileUploadBtn = document.getElementById("triggerSlideFileUploadBtn");
+  const slideFileInput = document.getElementById("slideFileInput");
+  const slideImageInput = document.getElementById("slideImageInput");
+  const slidePreviewBox = document.getElementById("slidePreviewBox");
+  const slidePreviewImg = document.getElementById("slidePreviewImg");
+
+  if (triggerSlideFileUploadBtn && slideFileInput) {
+    triggerSlideFileUploadBtn.addEventListener("click", () => {
+      slideFileInput.click();
+    });
+
+    slideFileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      handleImageFileUpload(file, (dataUrl) => {
+        if (slideImageInput) slideImageInput.value = dataUrl;
+        if (slidePreviewImg) slidePreviewImg.src = dataUrl;
+        if (slidePreviewBox) slidePreviewBox.style.display = "flex";
+        showToast("📸 Foto dari komputer berhasil dimuat!");
+      });
+    });
+  }
+
+  if (slideImageInput) {
+    slideImageInput.addEventListener("input", () => {
+      const val = slideImageInput.value.trim();
+      if (val && slidePreviewImg && slidePreviewBox) {
+        slidePreviewImg.src = val;
+        slidePreviewBox.style.display = "flex";
+      } else if (slidePreviewBox) {
+        slidePreviewBox.style.display = "none";
+      }
+    });
+  }
+
+  function handleImageFileUpload(file, callback) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1200;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/webp", 0.85);
+        callback(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   function renderAdminHeroSlides() {
     const listEl = document.getElementById("adminHeroSlidesList");
     if (!listEl) return;
@@ -195,11 +264,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     listEl.innerHTML = heroSlidesData.map((slide, index) => `
       <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 1rem; flex-grow: 1;">
-          <img src="${slide.image}" alt="Thumb" style="width: 70px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">
-          <div>
+        <div style="display: flex; align-items: center; gap: 1rem; flex-grow: 1; overflow: hidden;">
+          <img src="${slide.image}" alt="Thumb" style="width: 70px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color); flex-shrink: 0;" onerror="this.onerror=null; this.src='assets/hero.png';">
+          <div style="overflow: hidden;">
             <strong style="color: var(--text-primary); font-size: 0.9rem; display: block;">Slide #${index + 1}: ${slide.caption || 'Tanpa Caption'}</strong>
-            <span style="font-size: 0.78rem; color: var(--text-muted); word-break: break-all;">${slide.image}</span>
+            <span style="font-size: 0.78rem; color: var(--text-muted); word-break: break-all; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">${slide.image.substring(0, 80)}...</span>
           </div>
         </div>
         <button class="btn-secondary delete-slide-btn" data-id="${slide.id}" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border-color: var(--accent-rose); color: var(--accent-rose); flex-shrink: 0;">
@@ -240,6 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof saveDynamicHeroSlides === "function") saveDynamicHeroSlides(heroSlidesData);
 
       addHeroSlideForm.reset();
+      if (slidePreviewBox) slidePreviewBox.style.display = "none";
       renderAdminHeroSlides();
       showToast("📸 Slide foto banner baru berhasil ditambahkan!");
     });
