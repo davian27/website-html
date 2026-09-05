@@ -102,6 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (statUsers) statUsers.textContent = cfg.statUsers;
     if (statLicense) statLicense.textContent = cfg.statLicense;
     if (statRating) statRating.textContent = cfg.statRating;
+
+    // Update Hero Image from Supabase Cloud / Cache
+    if (window.skSupabase && typeof window.skSupabase.getActiveHeroImageUrl === "function") {
+      window.skSupabase.getActiveHeroImageUrl().then(heroUrl => {
+        const heroImg = document.querySelector(".hero-img");
+        if (heroImg && heroUrl) {
+          heroImg.src = heroUrl;
+        }
+      }).catch(err => console.warn("Supabase hero image fetch error:", err));
+    }
   }
 
   /* ==========================================

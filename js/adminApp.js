@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTestimonialsAdmin();
   renderFaqsAdmin();
   setupEventListeners();
+  initSupabaseAdminUI();
 
   /* ==========================================
      Authentication System
@@ -666,5 +667,100 @@ document.addEventListener("DOMContentLoaded", () => {
         if (targetEl) targetEl.style.display = "block";
       });
     });
+  }
+
+  /* ==========================================
+     Supabase Config & Cloud Hero Upload Handlers
+     ========================================== */
+  function initSupabaseAdminUI() {
+    const supabaseConfigForm = document.getElementById("supabaseConfigForm");
+    const supabaseUrlInput = document.getElementById("supabaseUrlInput");
+    const supabaseKeyInput = document.getElementById("supabaseKeyInput");
+    const supabaseStatusBadge = document.getElementById("supabaseStatusBadge");
+    const supabaseSaveNotice = document.getElementById("supabaseSaveNotice");
+
+    const heroUploadForm = document.getElementById("heroUploadForm");
+    const heroFileInput = document.getElementById("heroFileInput");
+    const heroUploadBtn = document.getElementById("heroUploadBtn");
+    const heroUploadProgress = document.getElementById("heroUploadProgress");
+    const currentHeroPreviewImg = document.getElementById("currentHeroPreviewImg");
+
+    if (window.skSupabase) {
+      const creds = window.skSupabase.getCredentials();
+      if (supabaseUrlInput) supabaseUrlInput.value = creds.url;
+      if (supabaseKeyInput) supabaseKeyInput.value = creds.anonKey;
+
+      updateSupabaseBadge(Boolean(creds.url && creds.anonKey));
+
+      window.skSupabase.getActiveHeroImageUrl().then(url => {
+        if (currentHeroPreviewImg && url) {
+          currentHeroPreviewImg.src = url;
+        }
+      });
+    }
+
+    function updateSupabaseBadge(isConnected) {
+      if (!supabaseStatusBadge) return;
+      if (isConnected) {
+        supabaseStatusBadge.textContent = "Terkoneksi ke Cloud";
+        supabaseStatusBadge.style.background = "rgba(16, 185, 129, 0.15)";
+        supabaseStatusBadge.style.color = "#10b981";
+        supabaseStatusBadge.style.borderColor = "rgba(16, 185, 129, 0.3)";
+      } else {
+        supabaseStatusBadge.textContent = "Belum Terkoneksi";
+        supabaseStatusBadge.style.background = "rgba(239, 68, 68, 0.15)";
+        supabaseStatusBadge.style.color = "#ef4444";
+        supabaseStatusBadge.style.borderColor = "rgba(239, 68, 68, 0.3)";
+      }
+    }
+
+    if (supabaseConfigForm) {
+      supabaseConfigForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const url = supabaseUrlInput.value.trim();
+        const key = supabaseKeyInput.value.trim();
+
+        if (window.skSupabase) {
+          window.skSupabase.saveCredentials(url, key);
+          updateSupabaseBadge(Boolean(url && key));
+          if (supabaseSaveNotice) {
+            supabaseSaveNotice.style.display = "inline-block";
+            setTimeout(() => { supabaseSaveNotice.style.display = "none"; }, 3000);
+          }
+          showToast("Kredensial Supabase berhasil disimpan!");
+        }
+      });
+    }
+
+    if (heroUploadForm) {
+      heroUploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const file = heroFileInput.files[0];
+        if (!file) {
+          alert("Pilih file gambar terlebih dahulu!");
+          return;
+        }
+
+        if (!window.skSupabase || !window.skSupabase.getCredentials().url) {
+          alert("Silakan isi & simpan Supabase URL & Anon Key terlebih dahulu di form bagian atas!");
+          return;
+        }
+
+        if (heroUploadProgress) heroUploadProgress.style.display = "block";
+        if (heroUploadBtn) heroUploadBtn.disabled = true;
+
+        try {
+          const publicUrl = await window.skSupabase.uploadHeroImageToSupabase(file);
+          if (currentHeroPreviewImg) currentHeroPreviewImg.src = publicUrl;
+          showToast("Foto hero berhasil diunggah & dipasang ke Cloud!");
+          heroFileInput.value = "";
+        } catch (err) {
+          alert(err.message);
+        } finally {
+          if (heroUploadProgress) heroUploadProgress.style.display = "none";
+          if (heroUploadBtn) heroUploadBtn.disabled = false;
+        }
+      });
+    }
   }
 });
