@@ -131,6 +131,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 1-Click Reset Password to Default (admin / admin123)
+  const resetAdminPasswordBtn = document.getElementById("resetAdminPasswordBtn");
+  if (resetAdminPasswordBtn) {
+    resetAdminPasswordBtn.addEventListener("click", () => {
+      localStorage.setItem("sk_admin_creds", JSON.stringify(defaultCreds));
+      localStorage.removeItem("sk_admin_authenticated");
+      sessionStorage.removeItem("sk_admin_authenticated");
+      
+      if (loginUsernameInput) loginUsernameInput.value = "admin";
+      if (loginPasswordInput) loginPasswordInput.value = "admin123";
+      if (loginErrorAlert) loginErrorAlert.style.display = "none";
+      
+      alert("🔑 Kredensial Admin berhasil di-reset ke default!\n\nUsername: admin\nPassword: admin123\n\nSilakan klik tombol 'Masuk Sekarang'.");
+    });
+  }
+
   // Logout Handler
   if (adminLogoutBtn) {
     adminLogoutBtn.addEventListener("click", () => {
