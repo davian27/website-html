@@ -357,6 +357,9 @@ button, input, select {
 
 .hero-preview-container {
   position: relative;
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
 }
 
 .hero-image-card {
@@ -364,11 +367,17 @@ button, input, select {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 0.75rem;
+  padding: 0.6rem;
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   transition: var(--transition-normal);
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-image-card:hover {
@@ -378,10 +387,11 @@ button, input, select {
 
 .hero-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: var(--radius-md);
   display: block;
   object-fit: cover;
+  object-position: top center;
 }
 
 .hero-floating-badge {
@@ -1797,6 +1807,7 @@ html, body {
 .hero-preview-container {
   position: relative;
   width: 100%;
+  max-width: 100%;
 }
 
 .hero-image-card {
@@ -1804,10 +1815,13 @@ html, body {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 0.75rem;
+  padding: 0.5rem;
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   transition: var(--transition-normal);
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 280px;
 }
 
 .hero-image-card:hover {
@@ -1817,10 +1831,11 @@ html, body {
 
 .hero-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: var(--radius-md);
   display: block;
   object-fit: cover;
+  object-position: top center;
 }
 
 .hero-floating-badge {

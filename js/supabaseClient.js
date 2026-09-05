@@ -85,6 +85,59 @@
   }
 
   /**
+   * Kompress & resize file gambar agar pas dengan container web (max-width 1280px)
+   */
+  function compressImageFile(file, maxWidth = 1280, maxHeight = 800, quality = 0.85) {
+    return new Promise((resolve) => {
+      if (!file.type || !file.type.startsWith("image/") || file.size < 150 * 1024) {
+        return resolve(file);
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], "hero-active.jpg", {
+                type: "image/jpeg",
+                lastModified: Date.now()
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          }, "image/jpeg", quality);
+        };
+        img.onerror = () => resolve(file);
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
    * Upload foto Hero baru ke Supabase Storage Bucket ('katalog-assets')
    */
   async function uploadHeroImageToSupabase(file) {
@@ -93,13 +146,15 @@
       throw new Error("Supabase URL & Anon Key belum dikonfigurasi!");
     }
 
-    const ext = file.name.split('.').pop() || 'png';
+    // Kompress & pas-kan ukuran foto terlebih dahulu
+    const fileToUpload = await compressImageFile(file);
+    const ext = fileToUpload.name.split('.').pop() || 'jpg';
     const fileName = `hero-active.${ext}`;
 
     // Upload ke bucket 'katalog-assets' (upsert true untuk menimpa file lama)
     const { data: uploadData, error: uploadError } = await client.storage
       .from("katalog-assets")
-      .upload(fileName, file, {
+      .upload(fileName, fileToUpload, {
         cacheControl: "0",
         upsert: true
       });
