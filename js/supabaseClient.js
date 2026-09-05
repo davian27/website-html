@@ -23,7 +23,7 @@
   function saveSupabaseCredentials(url, anonKey) {
     localStorage.setItem(STORAGE_KEY_URL, url.trim());
     localStorage.setItem(STORAGE_KEY_ANON, anonKey.trim());
-    supabaseClientInstance = null; // reset instance so it re-initializes
+    supabaseClientInstance = null;
   }
 
   function getSupabaseClient() {
@@ -44,36 +44,41 @@
   }
 
   /**
-   * Mendapatkan URL Hero Image aktif dari Supabase / LocalCache / Fallback
+   * Mendapatkan URL Hero Image aktif dari Supabase Storage Bucket ('katalog-assets')
    */
   async function getActiveHeroImageUrl() {
     const cachedUrl = localStorage.getItem(STORAGE_KEY_HERO_URL);
-    
     const client = getSupabaseClient();
+
     if (!client) {
       return cachedUrl || "assets/hero.png?v=2";
     }
 
     try {
-      // 1. Coba baca dari tabel site_settings jika ada
-      const { data, error } = await client
-        .from("site_settings")
-        .select("value")
-        .eq("key", "hero_image_url")
-        .single();
+      // List file di bucket katalog-assets yang diurutkan berdasarkan waktu pembuatan terbaru
+      const { data: fileList, error: listError } = await client.storage
+        .from("katalog-assets")
+        .list("", { sortBy: { column: "created_at", order: "desc" } });
 
-      if (!error && data && data.value) {
-        localStorage.setItem(STORAGE_KEY_HERO_URL, data.value);
-        return data.value;
-      }
+      if (!listError && fileList && fileList.length > 0) {
+        // Cari file gambar valid (abai folder/hidden file)
+        const latestFile = fileList.find(f => f.name && !f.name.startsWith('.') && f.metadata);
 
-      // 2. Jika tidak ada di tabel, cek file public dari Storage Bucket 'katalog-assets'
-      const { data: publicData } = client.storage.from("katalog-assets").getPublicUrl("hero-active.png");
-      if (publicData && publicData.publicUrl) {
-        return publicData.publicUrl;
+        if (latestFile) {
+          const { data: publicData } = client.storage
+            .from("katalog-assets")
+            .getPublicUrl(latestFile.name);
+
+          if (publicData && publicData.publicUrl) {
+            const timeTag = latestFile.updated_at ? new Date(latestFile.updated_at).getTime() : Date.now();
+            const finalUrl = `${publicData.publicUrl}?t=${timeTag}`;
+            localStorage.setItem(STORAGE_KEY_HERO_URL, finalUrl);
+            return finalUrl;
+          }
+        }
       }
     } catch (err) {
-      console.warn("Supabase fetch error, fallback to cache:", err);
+      console.warn("Supabase storage list error, fallback to cache:", err);
     }
 
     return cachedUrl || "assets/hero.png?v=2";
@@ -88,15 +93,14 @@
       throw new Error("Supabase URL & Anon Key belum dikonfigurasi!");
     }
 
-    // Nama file unik dengan timestamp
     const ext = file.name.split('.').pop() || 'png';
-    const fileName = `hero-${Date.now()}.${ext}`;
+    const fileName = `hero-active.${ext}`;
 
-    // Upload ke bucket 'katalog-assets'
+    // Upload ke bucket 'katalog-assets' (upsert true untuk menimpa file lama)
     const { data: uploadData, error: uploadError } = await client.storage
       .from("katalog-assets")
       .upload(fileName, file, {
-        cacheControl: "3600",
+        cacheControl: "0",
         upsert: true
       });
 
@@ -114,20 +118,7 @@
       .from("katalog-assets")
       .getPublicUrl(fileName);
 
-    const publicUrl = publicUrlData.publicUrl;
-
-    // Simpan URL ke tabel site_settings (upsert jika ada tabel)
-    try {
-      await client.from("site_settings").upsert({
-        key: "hero_image_url",
-        value: publicUrl,
-        updated_at: new Date().toISOString()
-      }, { onConflict: "key" });
-    } catch (e) {
-      console.warn("Upsert site_settings warning:", e);
-    }
-
-    // Simpan ke local cache juga
+    const publicUrl = `${publicUrlData.publicUrl}?v=${Date.now()}`;
     localStorage.setItem(STORAGE_KEY_HERO_URL, publicUrl);
     return publicUrl;
   }
