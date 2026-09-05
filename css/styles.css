@@ -1611,6 +1611,27 @@ button, input, select {
   color: var(--accent-cyan);
 }
 
+/* Modal Backdrop System */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 9990;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.modal-backdrop.active {
+  display: flex !important;
+}
+
 /* ==========================================================================
    Comprehensive Mobile & Tablet Responsive Design
    ========================================================================== */

@@ -71,10 +71,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const isAuthLocal = localStorage.getItem("sk_admin_authenticated");
     
     if (isAuthSession === "true" || isAuthLocal === "true") {
-      if (adminLoginModal) adminLoginModal.classList.remove("active");
+      if (adminLoginModal) {
+        adminLoginModal.classList.remove("active");
+        adminLoginModal.style.setProperty("display", "none", "important");
+      }
       if (adminLogoutBtn) adminLogoutBtn.style.display = "inline-flex";
     } else {
-      if (adminLoginModal) adminLoginModal.classList.add("active");
+      if (adminLoginModal) {
+        adminLoginModal.classList.add("active");
+        adminLoginModal.style.setProperty("display", "flex", "important");
+      }
       if (adminLogoutBtn) adminLogoutBtn.style.display = "none";
     }
   }
@@ -108,7 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
           sessionStorage.setItem("sk_admin_authenticated", "true");
         }
 
-        if (adminLoginModal) adminLoginModal.classList.remove("active");
+        if (adminLoginModal) {
+          adminLoginModal.classList.remove("active");
+          adminLoginModal.style.setProperty("display", "none", "important");
+        }
         if (adminLogoutBtn) adminLogoutBtn.style.display = "inline-flex";
         showToast("🔑 Login Berhasil! Selamat Datang Admin.");
       } else {
