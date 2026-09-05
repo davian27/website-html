@@ -279,6 +279,37 @@
           </form>
         </div>
 
+        <!-- Form Upload & Kelola Slide Foto Hero ke Cloud -->
+        <div class="admin-card" style="margin-bottom: 1.5rem; border: 1px solid rgba(245, 158, 11, 0.4); background: rgba(15, 23, 42, 0.6);">
+          <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent-amber); display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-images"></i> Kelola Slide Foto Hero Cloud (Image Slider)
+          </h2>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Unggah satu atau beberapa foto untuk ditampilkan sebagai <strong>Image Slider Otomatis</strong> di halaman depan. Jika mengunggah lebih dari 1 foto, slideshow akan berganti secara otomatis.
+          </p>
+
+          <form id="heroUploadForm">
+            <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem;">
+              <div style="flex: 1; min-width: 250px;">
+                <label class="editor-label">Pilih File Foto Slide Baru</label>
+                <input type="file" id="heroFileInput" class="editor-input" accept="image/*" required>
+              </div>
+              <button type="submit" id="heroUploadBtn" class="btn-primary" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #f59e0b, #d97706); border: none; white-space: nowrap;">
+                <i class="fa-solid fa-plus"></i> Unggah Slide Baru
+              </button>
+            </div>
+            <div id="heroUploadProgress" style="display: none; margin-bottom: 1rem; font-size: 0.85rem; color: var(--accent-amber);">
+              <i class="fa-solid fa-spinner fa-spin"></i> Mengompres & mengunggah slide ke Supabase Cloud...
+            </div>
+          </form>
+
+          <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+            <label class="editor-label" style="margin-bottom: 0.75rem; display: block; font-weight: 700;">Daftar Slide Foto Terpasang</label>
+            <div id="heroSlidesAdminList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
 
         <form id="siteSettingsForm" class="admin-card">
           <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--accent-blue);">
