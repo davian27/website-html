@@ -103,14 +103,82 @@ document.addEventListener("DOMContentLoaded", () => {
     if (statLicense) statLicense.textContent = cfg.statLicense;
     if (statRating) statRating.textContent = cfg.statRating;
 
-    // Update Hero Image from Supabase Cloud / Cache
-    if (window.skSupabase && typeof window.skSupabase.getActiveHeroImageUrl === "function") {
-      window.skSupabase.getActiveHeroImageUrl().then(heroUrl => {
-        const heroImg = document.querySelector(".hero-img");
-        if (heroImg && heroUrl) {
-          heroImg.src = heroUrl;
+    // Render Hero Slideshow from Supabase Cloud / Cache
+    if (window.skSupabase && typeof window.skSupabase.getHeroSlides === "function") {
+      window.skSupabase.getHeroSlides().then(slides => {
+        const heroCard = document.getElementById("heroImageCard");
+        if (!heroCard || !slides || slides.length === 0) return;
+
+        if (slides.length === 1) {
+          heroCard.innerHTML = `<img src="${slides[0].url}" alt="Showcase Software Kasir & ERP" class="hero-img" onerror="this.onerror=null; this.src='assets/hero.png?v=2';">`;
+          return;
         }
-      }).catch(err => console.warn("Supabase hero image fetch error:", err));
+
+        let currentIndex = 0;
+        let slideTimer = null;
+
+        const slidesHTML = slides.map((slide, i) => `
+          <div class="hero-slide-item ${i === 0 ? 'active' : ''}">
+            <img src="${slide.url}" alt="Slide ${i + 1}" onerror="this.onerror=null; this.src='assets/hero.png?v=2';">
+          </div>
+        `).join('');
+
+        const dotsHTML = slides.map((_, i) => `
+          <span class="slider-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>
+        `).join('');
+
+        heroCard.innerHTML = `
+          <div class="hero-slider-wrapper">
+            ${slidesHTML}
+          </div>
+          <button class="slider-nav-btn prev" id="sliderPrevBtn" aria-label="Slide Sebelum"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="slider-nav-btn next" id="sliderNextBtn" aria-label="Slide Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
+          <div class="slider-dots-container">
+            ${dotsHTML}
+          </div>
+        `;
+
+        const slideItems = heroCard.querySelectorAll(".hero-slide-item");
+        const dotItems = heroCard.querySelectorAll(".slider-dot");
+        const prevBtn = heroCard.querySelector("#sliderPrevBtn");
+        const nextBtn = heroCard.querySelector("#sliderNextBtn");
+
+        function goToSlide(index) {
+          slideItems.forEach(item => item.classList.remove("active"));
+          dotItems.forEach(dot => dot.classList.remove("active"));
+
+          currentIndex = (index + slides.length) % slides.length;
+          if (slideItems[currentIndex]) slideItems[currentIndex].classList.add("active");
+          if (dotItems[currentIndex]) dotItems[currentIndex].classList.add("active");
+        }
+
+        function startAutoPlay() {
+          stopAutoPlay();
+          slideTimer = setInterval(() => {
+            goToSlide(currentIndex + 1);
+          }, 4500);
+        }
+
+        function stopAutoPlay() {
+          if (slideTimer) clearInterval(slideTimer);
+        }
+
+        if (prevBtn) prevBtn.addEventListener("click", () => { goToSlide(currentIndex - 1); startAutoPlay(); });
+        if (nextBtn) nextBtn.addEventListener("click", () => { goToSlide(currentIndex + 1); startAutoPlay(); });
+
+        dotItems.forEach(dot => {
+          dot.addEventListener("click", (e) => {
+            const idx = parseInt(e.target.getAttribute("data-index"), 10);
+            goToSlide(idx);
+            startAutoPlay();
+          });
+        });
+
+        heroCard.addEventListener("mouseenter", stopAutoPlay);
+        heroCard.addEventListener("mouseleave", startAutoPlay);
+
+        startAutoPlay();
+      }).catch(err => console.warn("Hero slides load error:", err));
     }
   }
 

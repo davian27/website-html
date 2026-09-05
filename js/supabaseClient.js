@@ -1,12 +1,13 @@
 /**
  * Supabase Client & Helper Functions - SoftwareKatalog.id
- * Mendukung Upload Foto Hero & Sync Data Toko ke Supabase Cloud
+ * Mendukung Upload Foto Hero, Image Slider & Sync Data Toko ke Supabase Cloud
  */
 
 (function () {
   const STORAGE_KEY_URL = "sk_supabase_url";
   const STORAGE_KEY_ANON = "sk_supabase_anon_key";
   const STORAGE_KEY_HERO_URL = "sk_supabase_hero_url";
+  const STORAGE_KEY_HERO_SLIDES = "sk_hero_slides_cache";
 
   // Pre-configured default credentials
   const DEFAULT_SUPABASE_URL = "https://yvtyhwpdatrenvriormq.supabase.co";
@@ -44,47 +45,6 @@
   }
 
   /**
-   * Mendapatkan URL Hero Image aktif dari Supabase Storage Bucket ('katalog-assets')
-   */
-  async function getActiveHeroImageUrl() {
-    const cachedUrl = localStorage.getItem(STORAGE_KEY_HERO_URL);
-    const client = getSupabaseClient();
-
-    if (!client) {
-      return cachedUrl || "assets/hero.png?v=2";
-    }
-
-    try {
-      // List file di bucket katalog-assets yang diurutkan berdasarkan waktu pembuatan terbaru
-      const { data: fileList, error: listError } = await client.storage
-        .from("katalog-assets")
-        .list("", { sortBy: { column: "created_at", order: "desc" } });
-
-      if (!listError && fileList && fileList.length > 0) {
-        // Cari file gambar valid (abai folder/hidden file)
-        const latestFile = fileList.find(f => f.name && !f.name.startsWith('.') && f.metadata);
-
-        if (latestFile) {
-          const { data: publicData } = client.storage
-            .from("katalog-assets")
-            .getPublicUrl(latestFile.name);
-
-          if (publicData && publicData.publicUrl) {
-            const timeTag = latestFile.updated_at ? new Date(latestFile.updated_at).getTime() : Date.now();
-            const finalUrl = `${publicData.publicUrl}?t=${timeTag}`;
-            localStorage.setItem(STORAGE_KEY_HERO_URL, finalUrl);
-            return finalUrl;
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Supabase storage list error, fallback to cache:", err);
-    }
-
-    return cachedUrl || "assets/hero.png?v=2";
-  }
-
-  /**
    * Kompress & resize file gambar agar pas dengan container web (max-width 1280px)
    */
   function compressImageFile(file, maxWidth = 1280, maxHeight = 800, quality = 0.85) {
@@ -119,7 +79,7 @@
 
           canvas.toBlob((blob) => {
             if (blob) {
-              const compressedFile = new File([blob], "hero-active.jpg", {
+              const compressedFile = new File([blob], "slide.jpg", {
                 type: "image/jpeg",
                 lastModified: Date.now()
               });
@@ -138,24 +98,67 @@
   }
 
   /**
-   * Upload foto Hero baru ke Supabase Storage Bucket ('katalog-assets')
+   * Mendapatkan daftar URL Hero Slides dari Supabase Storage Bucket ('katalog-assets')
    */
-  async function uploadHeroImageToSupabase(file) {
+  async function getHeroSlidesFromSupabase() {
+    const client = getSupabaseClient();
+    const fallback = [{ id: "default", name: "hero.png", url: "assets/hero.png?v=2" }];
+
+    if (!client) {
+      const cached = localStorage.getItem(STORAGE_KEY_HERO_SLIDES);
+      return cached ? JSON.parse(cached) : fallback;
+    }
+
+    try {
+      const { data: fileList, error: listError } = await client.storage
+        .from("katalog-assets")
+        .list("", { sortBy: { column: "created_at", order: "desc" } });
+
+      if (!listError && fileList && fileList.length > 0) {
+        const validFiles = fileList.filter(f => f.name && !f.name.startsWith('.') && f.metadata);
+
+        if (validFiles.length > 0) {
+          const slides = validFiles.map((file, idx) => {
+            const { data: publicData } = client.storage
+              .from("katalog-assets")
+              .getPublicUrl(file.name);
+            
+            const timeTag = file.updated_at ? new Date(file.updated_at).getTime() : Date.now();
+            return {
+              id: file.id || `slide-${idx}-${file.name}`,
+              name: file.name,
+              url: `${publicData.publicUrl}?t=${timeTag}`
+            };
+          });
+
+          localStorage.setItem(STORAGE_KEY_HERO_SLIDES, JSON.stringify(slides));
+          return slides;
+        }
+      }
+    } catch (err) {
+      console.warn("Supabase hero slides fetch error, fallback to cache:", err);
+    }
+
+    const cached = localStorage.getItem(STORAGE_KEY_HERO_SLIDES);
+    return cached ? JSON.parse(cached) : fallback;
+  }
+
+  /**
+   * Upload foto Hero Slide baru ke Supabase Storage Bucket ('katalog-assets')
+   */
+  async function uploadHeroSlideToSupabase(file) {
     const client = getSupabaseClient();
     if (!client) {
       throw new Error("Supabase URL & Anon Key belum dikonfigurasi!");
     }
 
-    // Kompress & pas-kan ukuran foto terlebih dahulu
     const fileToUpload = await compressImageFile(file);
-    const ext = fileToUpload.name.split('.').pop() || 'jpg';
-    const fileName = `hero-active.${ext}`;
+    const fileName = `hero-slide-${Date.now()}.jpg`;
 
-    // Upload ke bucket 'katalog-assets' (upsert true untuk menimpa file lama)
     const { data: uploadData, error: uploadError } = await client.storage
       .from("katalog-assets")
       .upload(fileName, fileToUpload, {
-        cacheControl: "0",
+        cacheControl: "3600",
         upsert: true
       });
 
@@ -165,17 +168,31 @@
       if (uploadError.message && (uploadError.message.includes("row-level security") || uploadError.message.includes("policy"))) {
         tip = "\n\n(Izin Upload Supabase: Di Supabase Storage -> tab Policies -> katalog-assets, klik 'New Policy' -> pilih 'Allow All / Anonymous Upload' -> Save)";
       }
-      throw new Error("Gagal mengunggah file ke Supabase Storage: " + uploadError.message + tip);
+      throw new Error("Gagal mengunggah slide ke Supabase Storage: " + uploadError.message + tip);
     }
 
-    // Dapatkan Public URL
-    const { data: publicUrlData } = client.storage
-      .from("katalog-assets")
-      .getPublicUrl(fileName);
+    return await getHeroSlidesFromSupabase();
+  }
 
-    const publicUrl = `${publicUrlData.publicUrl}?v=${Date.now()}`;
-    localStorage.setItem(STORAGE_KEY_HERO_URL, publicUrl);
-    return publicUrl;
+  /**
+   * Hapus foto Hero Slide dari Supabase Storage Bucket ('katalog-assets')
+   */
+  async function deleteHeroSlideFromSupabase(fileName) {
+    const client = getSupabaseClient();
+    if (!client) {
+      throw new Error("Supabase URL & Anon Key belum dikonfigurasi!");
+    }
+
+    const { error: deleteError } = await client.storage
+      .from("katalog-assets")
+      .remove([fileName]);
+
+    if (deleteError) {
+      console.error("Supabase Storage Delete Error:", deleteError);
+      throw new Error("Gagal menghapus slide dari Supabase Storage: " + deleteError.message);
+    }
+
+    return await getHeroSlidesFromSupabase();
   }
 
   // Export to global scope
@@ -183,7 +200,8 @@
     getCredentials: getSupabaseCredentials,
     saveCredentials: saveSupabaseCredentials,
     getClient: getSupabaseClient,
-    getActiveHeroImageUrl: getActiveHeroImageUrl,
-    uploadHeroImageToSupabase: uploadHeroImageToSupabase
+    getHeroSlides: getHeroSlidesFromSupabase,
+    uploadHeroSlide: uploadHeroSlideToSupabase,
+    deleteHeroSlide: deleteHeroSlideFromSupabase
   };
 })();

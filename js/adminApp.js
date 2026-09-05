@@ -670,7 +670,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ==========================================
-     Supabase Config & Cloud Hero Upload Handlers
+     Supabase Config & Cloud Hero Slideshow Handlers
      ========================================== */
   function initSupabaseAdminUI() {
     const supabaseConfigForm = document.getElementById("supabaseConfigForm");
@@ -683,7 +683,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroFileInput = document.getElementById("heroFileInput");
     const heroUploadBtn = document.getElementById("heroUploadBtn");
     const heroUploadProgress = document.getElementById("heroUploadProgress");
-    const currentHeroPreviewImg = document.getElementById("currentHeroPreviewImg");
+    const heroSlidesAdminList = document.getElementById("heroSlidesAdminList");
 
     if (window.skSupabase) {
       const creds = window.skSupabase.getCredentials();
@@ -691,12 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (supabaseKeyInput) supabaseKeyInput.value = creds.anonKey;
 
       updateSupabaseBadge(Boolean(creds.url && creds.anonKey));
-
-      window.skSupabase.getActiveHeroImageUrl().then(url => {
-        if (currentHeroPreviewImg && url) {
-          currentHeroPreviewImg.src = url;
-        }
-      });
+      refreshHeroSlidesList();
     }
 
     function updateSupabaseBadge(isConnected) {
@@ -714,6 +709,51 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    async function refreshHeroSlidesList() {
+      if (!heroSlidesAdminList || !window.skSupabase) return;
+
+      try {
+        const slides = await window.skSupabase.getHeroSlides();
+        if (!slides || slides.length === 0) {
+          heroSlidesAdminList.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-muted); font-size: 0.85rem;">Belum ada slide foto hero. Silakan unggah foto slide pertama Anda.</div>`;
+          return;
+        }
+
+        heroSlidesAdminList.innerHTML = slides.map((slide, idx) => `
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; position: relative;">
+            <div style="width: 100%; height: 120px; border-radius: 6px; overflow: hidden; background: #000;">
+              <img src="${slide.url}" alt="${slide.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='assets/hero.png?v=2';">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Slide ${idx + 1}</span>
+              ${slide.name && slide.name !== "hero.png" ? `
+                <button type="button" class="btn-delete-slide" data-name="${slide.name}" style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">
+                  <i class="fa-solid fa-trash"></i> Hapus
+                </button>
+              ` : `<span style="font-size: 0.75rem; color: var(--text-muted);">Default</span>`}
+            </div>
+          </div>
+        `).join('');
+
+        heroSlidesAdminList.querySelectorAll(".btn-delete-slide").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const fileName = e.currentTarget.getAttribute("data-name");
+            if (confirm("Apakah Anda yakin ingin menghapus slide foto ini dari Cloud?")) {
+              try {
+                await window.skSupabase.deleteHeroSlide(fileName);
+                showToast("Slide foto berhasil dihapus!");
+                refreshHeroSlidesList();
+              } catch (err) {
+                alert("Gagal menghapus slide: " + err.message);
+              }
+            }
+          });
+        });
+      } catch (err) {
+        console.warn("Refresh hero slides list error:", err);
+      }
+    }
+
     if (supabaseConfigForm) {
       supabaseConfigForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -728,6 +768,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => { supabaseSaveNotice.style.display = "none"; }, 3000);
           }
           showToast("Kredensial Supabase berhasil disimpan!");
+          refreshHeroSlidesList();
         }
       });
     }
@@ -750,10 +791,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (heroUploadBtn) heroUploadBtn.disabled = true;
 
         try {
-          const publicUrl = await window.skSupabase.uploadHeroImageToSupabase(file);
-          if (currentHeroPreviewImg) currentHeroPreviewImg.src = publicUrl;
-          showToast("Foto hero berhasil diunggah & dipasang ke Cloud!");
+          await window.skSupabase.uploadHeroSlide(file);
+          showToast("Slide foto hero baru berhasil diunggah ke Cloud!");
           heroFileInput.value = "";
+          refreshHeroSlidesList();
         } catch (err) {
           alert(err.message);
         } finally {
