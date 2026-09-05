@@ -438,6 +438,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function openSoftwareModal(swId = null) {
     if (!softwareModal) return;
     const titleEl = document.getElementById("softwareModalTitle");
+    const swImageInput = document.getElementById("swImage");
+    const swImagePreview = document.getElementById("swImagePreview");
+    const swFileInput = document.getElementById("swImageFile");
+
+    if (swFileInput) swFileInput.value = "";
+
     if (swId) {
       const item = catalogData.find(s => s.id === swId);
       if (!item) return;
@@ -451,12 +457,54 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("swPriceStandard").value = item.prices.standard.price;
       document.getElementById("swPricePro").value = item.prices.pro.price;
       document.getElementById("swPriceEnterprise").value = item.prices.enterprise.price;
+
+      const imgUrl = item.image || "assets/hero.png";
+      if (swImageInput) swImageInput.value = imgUrl;
+      if (swImagePreview) swImagePreview.src = imgUrl;
     } else {
       titleEl.textContent = "Tambah Software Baru";
       softwareEditForm.reset();
       document.getElementById("swId").value = "";
+      if (swImageInput) swImageInput.value = "assets/hero.png";
+      if (swImagePreview) swImagePreview.src = "assets/hero.png";
     }
     softwareModal.classList.add("active");
+  }
+
+  const swImageFileEl = document.getElementById("swImageFile");
+  if (swImageFileEl) {
+    swImageFileEl.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const preview = document.getElementById("swImagePreview");
+      const urlInput = document.getElementById("swImage");
+
+      if (window.skSupabase && window.skSupabase.getCredentials().url) {
+        try {
+          showToast("Mengunggah foto software ke Supabase Cloud...");
+          const publicUrl = await window.skSupabase.uploadSoftwareImage(file);
+          if (urlInput) urlInput.value = publicUrl;
+          if (preview) preview.src = publicUrl;
+          showToast("Foto software berhasil diunggah!");
+        } catch (err) {
+          alert("Gagal upload foto ke Supabase: " + err.message);
+        }
+      } else {
+        compressImageFile(file, (dataUrl) => {
+          if (urlInput) urlInput.value = dataUrl;
+          if (preview) preview.src = dataUrl;
+        });
+      }
+    });
+  }
+
+  const swImageInputEl = document.getElementById("swImage");
+  if (swImageInputEl) {
+    swImageInputEl.addEventListener("input", (e) => {
+      const preview = document.getElementById("swImagePreview");
+      if (preview) preview.src = e.target.value.trim() || "assets/hero.png";
+    });
   }
 
   function closeSoftwareModal() {
@@ -475,6 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tagline = document.getElementById("swTagline").value.trim();
       const badge = document.getElementById("swBadge").value.trim() || "Rekomendasi";
       const description = document.getElementById("swDescription").value.trim();
+      const image = document.getElementById("swImage") ? document.getElementById("swImage").value.trim() || "assets/hero.png" : "assets/hero.png";
       const pStd = document.getElementById("swPriceStandard").value.trim();
       const pPro = document.getElementById("swPricePro").value.trim();
       const pEnt = document.getElementById("swPriceEnterprise").value.trim();
@@ -487,6 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
           sw.tagline = tagline;
           sw.badge = badge;
           sw.description = description;
+          sw.image = image;
           sw.prices.standard.price = pStd;
           sw.prices.pro.price = pPro;
           sw.prices.enterprise.price = pEnt;
@@ -503,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
           accentColor: "#3b82f6",
           themeGradient: "linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.1))",
           icon: "fa-box-open",
-          image: "assets/hero.png",
+          image: image,
           description: description,
           prices: {
             standard: { label: "Standard Desktop", price: pStd, period: "Sekali Bayar (Lifetime)", note: "1 PC Kasir" },
@@ -522,6 +572,13 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         catalogData.unshift(newSw);
       }
+
+      if (typeof saveDynamicCatalog === "function") saveDynamicCatalog(catalogData);
+      renderSoftwareTable();
+      closeSoftwareModal();
+      showToast(id ? "Data software berhasil diperbarui!" : "Software baru berhasil ditambahkan!");
+    });
+  }
 
       if (typeof saveDynamicCatalog === "function") {
         saveDynamicCatalog(catalogData);

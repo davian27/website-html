@@ -189,10 +189,45 @@
 
     if (deleteError) {
       console.error("Supabase Storage Delete Error:", deleteError);
-      throw new Error("Gagal menghapus slide dari Supabase Storage: " + deleteError.message);
+      let tip = "";
+      if (deleteError.message && (deleteError.message.includes("policy") || deleteError.message.includes("security") || deleteError.statusCode === "42501")) {
+        tip = "\n\n(Izin Hapus Supabase: Buka Supabase Storage -> Policies -> katalog-assets -> edit policy Anda dan centang opsi 'DELETE' -> Save)";
+      }
+      throw new Error("Gagal menghapus slide dari Supabase Storage: " + deleteError.message + tip);
     }
 
     return await getHeroSlidesFromSupabase();
+  }
+
+  /**
+   * Upload foto Software Thumbnail/Cover ke Supabase Storage Bucket ('katalog-assets')
+   */
+  async function uploadSoftwareImageToSupabase(file) {
+    const client = getSupabaseClient();
+    if (!client) {
+      throw new Error("Supabase URL & Anon Key belum dikonfigurasi!");
+    }
+
+    const fileToUpload = await compressImageFile(file, 1000, 600, 0.85);
+    const fileName = `sw-thumb-${Date.now()}.jpg`;
+
+    const { data: uploadData, error: uploadError } = await client.storage
+      .from("katalog-assets")
+      .upload(fileName, fileToUpload, {
+        cacheControl: "3600",
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.error("Supabase Software Upload Error:", uploadError);
+      throw new Error("Gagal mengunggah gambar software: " + uploadError.message);
+    }
+
+    const { data: publicUrlData } = client.storage
+      .from("katalog-assets")
+      .getPublicUrl(fileName);
+
+    return `${publicUrlData.publicUrl}?v=${Date.now()}`;
   }
 
   // Export to global scope
@@ -202,6 +237,7 @@
     getClient: getSupabaseClient,
     getHeroSlides: getHeroSlidesFromSupabase,
     uploadHeroSlide: uploadHeroSlideToSupabase,
-    deleteHeroSlide: deleteHeroSlideFromSupabase
+    deleteHeroSlide: deleteHeroSlideFromSupabase,
+    uploadSoftwareImage: uploadSoftwareImageToSupabase
   };
 })();

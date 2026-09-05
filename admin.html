@@ -645,6 +645,26 @@
             <textarea id="swDescription" class="editor-input" rows="3" required></textarea>
           </div>
 
+          <div class="editor-form-group" style="background: rgba(15, 23, 42, 0.4); border: 1px dashed var(--border-color); padding: 1.25rem; border-radius: var(--radius-md); margin: 1.25rem 0;">
+            <label class="editor-label" style="font-weight: 700; color: var(--accent-amber); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-image"></i> Foto Cover / Banner Software (Supabase Cloud)
+            </label>
+            
+            <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+              <div style="width: 130px; height: 80px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--border-color); flex-shrink: 0;">
+                <img id="swImagePreview" src="assets/hero.png" alt="Software Banner Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='assets/hero.png';">
+              </div>
+
+              <div style="flex: 1; min-width: 220px;">
+                <label class="editor-label" style="font-size: 0.8rem; margin-bottom: 0.35rem;">Pilih File Gambar Baru (Upload ke Cloud)</label>
+                <input type="file" id="swImageFile" class="editor-input" accept="image/*" style="font-size: 0.82rem; padding: 0.4rem 0.6rem; margin-bottom: 0.5rem;">
+                
+                <label class="editor-label" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Atau URL Gambar Direct</label>
+                <input type="text" id="swImage" class="editor-input" placeholder="assets/hero.png" style="font-size: 0.82rem;">
+              </div>
+            </div>
+          </div>
+
           <h3 style="font-size: 1rem; font-weight: 700; margin: 1.5rem 0 1rem; color: var(--accent-blue);">
             Harga Lisensi Sekali Bayar
           </h3>
